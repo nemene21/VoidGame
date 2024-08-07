@@ -37,8 +37,19 @@ void Player::process(float delta) {
 }
 
 void Player::private_process(float delta) {
-    camera_comp->offset = {0, -22};
+    // Camera movement
+    Vector2 mouse_offset = mouse_screen_pos() - half_res;
 
+    mouse_offset /= half_res.y; // -1 : 1 range
+    if (Vector2Length(mouse_offset) > 1)
+        mouse_offset = Vector2Normalize(mouse_offset);
+
+    mouse_offset *= 64; // Zoom
+    mouse_offset.y -= 22;
+
+    camera_comp->offset = Lerpi(camera_comp->offset, mouse_offset, 15);
+
+    // Movement
     Vector2 input_dir = InputVectorNormalized("left", "right", "up", "down");
     trans_comp->interpolate_velocity(Vector2Scale(input_dir, 150), 15);
 
