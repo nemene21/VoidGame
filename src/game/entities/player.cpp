@@ -1,35 +1,33 @@
 #include "player.hpp"
 
-Player::Player(): sprite {Sprite("test.png")} {
-    sprite.offset.y = -14;
+Player::Player(): Actor("test_guy.png", half_res, 100) {
     type = EntityType::PLAYER;
-    add_component(new TransformComponent(this, {RandF()*res.x, RandF()*res.y}));
-    trans_comp = (TransformComponent*)get_component(CompType::TRANSFORM);
+    sprite.offset.y = -22;
 
+    // Player animation
     anim_comp = new AnimationComponent(this);
     anim_comp->make_animation("run", 0.5, true);
     anim_comp->add_keyframe("run", 0, 1, [this](float anim) {
-        float dir = trans_comp->velocity.x > 0 ? 1 : -1;
-        if (abs(trans_comp->velocity.x) < 10) dir = 0;
 
-        float angle = dir * 22;
-        angle += sinf(GetTime()*15) * 10;
-
-        sprite.angle = Lerpi(sprite.angle, angle, 20);
-        sprite.scale = Lerpi(sprite.scale, {1, 1}, 20);
     });
 
     anim_comp->make_animation("idle", 1, true);
     anim_comp->add_keyframe("idle", 0, 1, [this](float anim) {
-        Vector2 new_scale = {
-            1 + sinf(GetTime() * 10) * 0.2,
-            1 + cosf(GetTime() * 10) * 0.2
-        };
 
-        sprite.scale = Lerpi(sprite.scale, new_scale, 20);
-        sprite.angle = Lerpi(sprite.angle, 0, 20);
     });
     add_component(anim_comp);
+
+    area_comp = new AreaComponent(this, 16);
+    area_comp->add_layer((int)AreaIndex::PLAYER_HURTBOX);
+    area_comp->add_mask_bit((int)AreaIndex::ENEMY_HITBOX);
+    add_component(area_comp);
+
+    collider_comp = new ColliderComponent(this, trans_comp->position, 8, 8);
+    collider_comp->add_mask_bit((int)ColliderIndex::TILEMAP);
+    add_component(collider_comp);
+
+    camera_comp = new CameraComponent(this);
+    add_component(camera_comp);
 
     join_group("Player");
 }
@@ -39,9 +37,14 @@ void Player::process(float delta) {
 }
 
 void Player::private_process(float delta) {
+    camera_comp->offset = {0, -22};
+
     Vector2 input_dir = InputVectorNormalized("left", "right", "up", "down");
     trans_comp->interpolate_velocity(Vector2Scale(input_dir, 150), 15);
 
-    std::string str = input_dir != Vector2{0, 0} ? "run" : "idle";
-    anim_comp->play(str);
+    std::string animation = input_dir != Vector2{0, 0} ? "run" : "idle";
+    anim_comp->play(animation);
+
+    int look_dir = mouse_pos().x > trans_comp->position.x ? 1 : -1;
+    trans_comp->scale.x = look_dir;
 }

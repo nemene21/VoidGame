@@ -33,12 +33,14 @@ void GameScene::process(float delta) {
             Networking::host();
 
             auto player = new Player();
+            CameraManager::bind_camera(player->camera_comp->get_camera());
             add_synced_entity(player, true);
 
         } else if (IsKeyPressed(KEY_J)) {
             Networking::join(Networking::get_local_ip());
 
             auto player = new Player();
+            CameraManager::bind_camera(player->camera_comp->get_camera());
             add_synced_entity(player, true);
         }
     }

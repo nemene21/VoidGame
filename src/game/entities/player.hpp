@@ -1,18 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include <entity.hpp>
-#include <transform_component.hpp>
-#include <animation_component.hpp>
-#include <sprites.hpp>
-#include <input.hpp>
+#include <entities/actor.hpp>
 
-class Player: public Entity {
+class Player: public Actor {
 public:
-    Sprite sprite;
-    TransformComponent* trans_comp;
-    AnimationComponent* anim_comp;
-    Player();
+    CameraComponent* camera_comp;
 
+    Player();
     void process(float delta);
     void private_process(float delta);
 };
