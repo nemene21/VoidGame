@@ -46,7 +46,6 @@ class Tilemap: public Entity {
 private:
     typedef struct {
         int type;
-        ColliderComponent collider;
     } TileTypeData;
 
     int type_count;
@@ -57,12 +56,15 @@ private:
     typedef std::map<std::pair<int, int>, TileDataVector> TileDataChunks;
     typedef std::set<std::pair<int, int>> ChunkSet;
 
+    typedef std::map<std::pair<int, int>, std::vector<ColliderComponent*>> ColliderChunkMap;
+
     TexturePtr texture;
 
     TileTypeChunks tiledata;
 
     TileDataChunks built_chunks;    
     ChunkSet changed_chunks;
+    ColliderChunkMap collider_chunks;
 
 public:
     Vector2 tilesize;

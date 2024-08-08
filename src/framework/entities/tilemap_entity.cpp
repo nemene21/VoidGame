@@ -68,12 +68,7 @@ void Tilemap::set_tile(int x, int y, int type) {
     changed_chunks.insert({chunk_pos.first - 1, chunk_pos.second + 1});
     changed_chunks.insert({chunk_pos.first + 1, chunk_pos.second - 1});
 
-    // Build tile collider
-    ColliderComponent collider = ColliderComponent(this, {x * tilesize.x, y * tilesize.y}, tilesize.x, tilesize.y);
-    collider.set_layer((int)ColliderIndex::TILEMAP, true);
-    collider.process(0);
-
-    tiledata[chunk_pos][std::make_pair(x, y)] = {type, collider};
+    tiledata[chunk_pos][std::make_pair(x, y)] = {type};
 }
 
 void Tilemap::set_tile(Vector2 tilepos, int type) {
@@ -193,6 +188,17 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
         built_chunks[chunk_pos] = {};
     else
         built_chunks[chunk_pos].clear();
+    
+    if (collider_chunks.find(chunk_pos) == collider_chunks.end()) {
+        collider_chunks[chunk_pos] = {};
+    } else {
+        for (auto comp: collider_chunks[chunk_pos]) {
+            delete comp;
+        }
+    }
+
+    auto& colliders = collider_chunks[chunk_pos];
+    colliders.clear();
 
     // Generate the corner positions from the tiles
     std::set<std::tuple<float, float, int>> corners;
@@ -203,6 +209,13 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
         corners.insert({pos.first -.5f, pos.second -.5f, tile.second.type});
         corners.insert({pos.first +.5f, pos.second -.5f, tile.second.type});
         corners.insert({pos.first -.5f, pos.second +.5f, tile.second.type});
+
+        // Tile's collider, position and texture position data
+        auto collider = new ColliderComponent(this, Vector2{pos.first, pos.second} * tilesize, tilesize.x, tilesize.y);
+        collider->add_layer((int)ColliderIndex::TILEMAP);
+        collider->process(0);
+
+        colliders.push_back(collider);
     }
 
     for (std::tuple<float, float, int> corner_data: corners) {
@@ -214,9 +227,6 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
         bitmap += get_tile(pos.first + .5f, pos.second - .5f) == -1 ? "." : "#";
         bitmap += get_tile(pos.first - .5f, pos.second + .5f) == -1 ? "." : "#";
         bitmap += get_tile(pos.first + .5f, pos.second + .5f) == -1 ? "." : "#";
-
-        // Tile's collider, position and texture position data
-        ColliderComponent collider = ColliderComponent(this, {pos.first, pos.second}, tilesize.x, tilesize.y);
 
         TileData data {{pos.first, pos.second}, {0, 0}};
     	
