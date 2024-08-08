@@ -463,6 +463,8 @@ void Tilemap::render(float delta) {
         (camera_pos.y / tilesize.y) / chunksize.y
     );
 
+    float diagonal = res_diagonal + sqrt(tilesize.x*tilesize.x + tilesize.y*tilesize.y);
+
     // Iterates trough a 3x3 chunk area and attempts drawing the tiles
     for (int x = camera_chunk_pos.first - 1; x <= camera_chunk_pos.first + 1; x++) {
         for (int y = camera_chunk_pos.second - 1; y <= camera_chunk_pos.second + 1; y++) {
@@ -477,7 +479,7 @@ void Tilemap::render(float delta) {
                     Vector2 tile_pos {tile.pos.x * tilesize.x, tile.pos.y * tilesize.y};
 
                     // Draw tile if in camera view
-                    if (Vector2Distance(camera_pos, tile_pos) < res_diagonal)
+                    if (Vector2Distance(camera_pos, tile_pos) < diagonal)
                         DrawTextureSheet(texture.get(), tile.state, {4.f*type_count, 4}, tile_pos, {1, 1});
                     // DrawCircleV(tile_pos, 2, RED);
                 }
