@@ -25,11 +25,11 @@ bool collides(ColliderComponent *coll1, ColliderComponent *coll2) {
 void resolve_collision(Vector2 direction, ColliderComponent *coll1, ColliderComponent *coll2) {
     if (direction.x != 0) {
         float distance = (coll1->shape.width + coll2->shape.width) * .5f;
-        coll1->position.x = coll2->position.x - distance * direction.x;
+        coll1->position.x = coll2->position.x - (distance + 0.2f) * direction.x;
         
     } else if (direction.y != 0) {
         float distance = (coll1->shape.height + coll2->shape.height) * .5f;
-        coll1->position.y = coll2->position.y - distance * direction.y;
+        coll1->position.y = coll2->position.y - (distance + 0.2f) * direction.y;
     }
 }
 // Collider rectangle init
