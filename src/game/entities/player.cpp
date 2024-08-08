@@ -1,19 +1,40 @@
 #include "player.hpp"
 
-Player::Player(): Actor("test_guy.png", half_res, 100) {
+Player::Player(): Actor("test_guy.png", half_res, 100),
+    run_particles {ParticleSystem("player_run.json")} {
     type = EntityType::PLAYER;
-    sprite.offset.y = -22;
+    
+    // Drawing data
+    sprite.offset.y = -11;
+    run_particles.z_coord = -1;
+    look_dir = 1;
 
     // Player animation
     anim_comp = new AnimationComponent(this);
+
+    // Run animation
     anim_comp->make_animation("run", 0.5, true);
     anim_comp->add_keyframe("run", 0, 1, [this](float anim) {
+        trans_comp->scale = Lerpi(trans_comp->scale, Vector2{(float)look_dir, 1}, 20);
 
+        float desired_angle = Vector2Normalize(trans_comp->velocity).x;
+        desired_angle *= 15;
+        desired_angle += sinf(GetTime() * 16) * 12;
+        trans_comp->angle = Lerpi(trans_comp->angle, desired_angle, 16);
     });
 
+    // Idle animation
     anim_comp->make_animation("idle", 1, true);
     anim_comp->add_keyframe("idle", 0, 1, [this](float anim) {
+        trans_comp->angle = Lerpi(trans_comp->angle, 0, 10);
 
+        Vector2 desired_scale = {
+            1 + sinf(GetTime() * 12) * 0.15,
+            1 + cosf(GetTime() * 12) * 0.15
+        };
+        desired_scale.x *= look_dir;
+
+        trans_comp->scale = Lerpi(trans_comp->scale, desired_scale, 20);
     });
     add_component(anim_comp);
 
@@ -33,7 +54,9 @@ Player::Player(): Actor("test_guy.png", half_res, 100) {
 }
 
 void Player::process(float delta) {
-    sprite.position = trans_comp->position;
+    sprite.update_transform(trans_comp);
+    run_particles.set_left((int)(Vector2Length(trans_comp->velocity) > 2));
+    run_particles.position = trans_comp->position;
 }
 
 void Player::private_process(float delta) {
@@ -45,7 +68,7 @@ void Player::private_process(float delta) {
         mouse_offset = Vector2Normalize(mouse_offset);
 
     mouse_offset *= 64; // Zoom
-    mouse_offset.y -= 22;
+    mouse_offset.y -= 11;
 
     camera_comp->offset = Lerpi(camera_comp->offset, mouse_offset, 15);
 
@@ -53,9 +76,9 @@ void Player::private_process(float delta) {
     Vector2 input_dir = InputVectorNormalized("left", "right", "up", "down");
     trans_comp->interpolate_velocity(Vector2Scale(input_dir, 150), 15);
 
+    // Animation
     std::string animation = input_dir != Vector2{0, 0} ? "run" : "idle";
     anim_comp->play(animation);
 
-    int look_dir = mouse_pos().x > trans_comp->position.x ? 1 : -1;
-    trans_comp->scale.x = look_dir;
+    look_dir = mouse_pos().x > trans_comp->position.x ? 1 : -1;
 }
