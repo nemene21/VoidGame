@@ -99,8 +99,8 @@ object_files/signal.o: ../src/framework/signal.cpp
 object_files/actor.o: ../src/game/entities/actor.cpp
 	g++ -g -O1 -Wall -Wno-missing-braces -I../src/game/ -I../src/framework/components/ -I../include/ -I../src/ -I../src/framework/ -I../src/framework/objects/ -I../src/framework/entities/ -c ../src/game/entities/actor.cpp -o $(@)
 
-object_files/player.o: ../src/game/entities/player.cpp
-	g++ -g -O1 -Wall -Wno-missing-braces -I../src/game/ -I../src/framework/components/ -I../include/ -I../src/ -I../src/framework/ -I../src/framework/objects/ -I../src/framework/entities/ -c ../src/game/entities/player.cpp -o $(@)
+object_files/player.o: ../src/game/entities/player/player.cpp
+	g++ -g -O1 -Wall -Wno-missing-braces -I../src/game/ -I../src/framework/components/ -I../include/ -I../src/ -I../src/framework/ -I../src/framework/objects/ -I../src/framework/entities/ -c ../src/game/entities/player/player.cpp -o $(@)
 
 object_files/game.o: ../src/game/scenes/game.cpp
 	g++ -g -O1 -Wall -Wno-missing-braces -I../src/game/ -I../src/framework/components/ -I../include/ -I../src/ -I../src/framework/ -I../src/framework/objects/ -I../src/framework/entities/ -c ../src/game/scenes/game.cpp -o $(@)

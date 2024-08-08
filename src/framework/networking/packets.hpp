@@ -15,6 +15,7 @@ enum class PacketType: uint8_t  {
     ENTITY_SYNC,
     ENTITY_NUKE,
     COMPONENT_UPDATE,
+    GENERATION,
     COUNT,
 };
 
@@ -52,6 +53,10 @@ struct EntitySyncPacket: public Packet {
 
 struct EntityNukePacket: public Packet {
     uint32_t id;
+};
+
+struct GenerationPacket: public Packet {
+    uint64_t seed;
 };
 
 extern std::function<void(Packet*)> unpackers[(int)PacketType::COUNT];

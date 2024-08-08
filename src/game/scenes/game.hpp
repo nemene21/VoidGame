@@ -2,7 +2,7 @@
 #define GAME_H
 #include <scene.hpp>
 #include <networking/networking.hpp>
-#include <entities/player.hpp>
+#include <entities/player/player.hpp>
 #include <tilemap_entity.hpp>
 
 class GameScene: public Scene {
@@ -14,7 +14,7 @@ public:
 
     void process(float delta);
 
-    void generate_level();
+    void generate_level(uint64_t seed);
     std::set<Vector2> generate_floor_tiles();
 };
 

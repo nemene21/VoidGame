@@ -19,6 +19,19 @@ int rand32() {
     return (first << 16) | other;
 }
 
+int rand64() {
+    unsigned int first  = rand();
+    unsigned int other  = rand();
+    unsigned int third  = rand();
+    unsigned int fourth = rand();
+
+    int num = (first << 16) | other;
+    num = (num << 16) | third;
+    num = (num << 16) | fourth;
+
+    return num;
+}
+
 const std::string roman_numbers[] = {
     "M" , "CM", "D",
     "CD", "C" , "XC", 

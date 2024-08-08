@@ -9,7 +9,7 @@
 #include <misc.hpp>
 #include <networking/networking.hpp>
 
-#include <entities/player.hpp>
+#include <entities/player/player.hpp>
 
 /// @brief Holds entities which are drawn and processed, offers group queries for entities and automatically removes entities queued for deletion
 /// @note To use a scene you have to initialise the scene with "new YourSceneClass()" and than set the scene with "SceneManager::set_scene("your_scene_name")"
