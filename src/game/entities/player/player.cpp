@@ -73,7 +73,7 @@ void Player::private_process(float delta) {
     camera_comp->offset = Lerpi(camera_comp->offset, mouse_offset, 15);
 
     // Movement
-    Vector2 input_dir = InputVectorNormalized("left", "right", "up", "down");
+    Vector2 input_dir = InputVectorNormalized("Left", "Right", "Up", "Down");
     trans_comp->interpolate_velocity(Vector2Scale(input_dir, 150), 15);
 
     // Animation

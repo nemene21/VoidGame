@@ -2,14 +2,15 @@
 
 // Input map (holds all inputs)
 std::map<std::string, std::vector<Input>> inputs = {
-    {"jump", {{InputType::KEY, KEY_SPACE}}},
-    {"shoot", {{InputType::MOUSE, MOUSE_BUTTON_LEFT}}},
-    {"continue", {{InputType::KEY, KEY_SPACE}, {InputType::KEY, KEY_ENTER}, {InputType::KEY, KEY_C}}},
+    {"Shoot", {{InputType::MOUSE, MOUSE_BUTTON_LEFT}}},
+    {"Continue", {{InputType::KEY, KEY_SPACE}, {InputType::KEY, KEY_ENTER}, {InputType::KEY, KEY_C}}},
 
-    {"up",    {{InputType::KEY, KEY_W}, {InputType::KEY, KEY_UP   }}},
-    {"left",  {{InputType::KEY, KEY_A}, {InputType::KEY, KEY_LEFT }}},
-    {"down",  {{InputType::KEY, KEY_S}, {InputType::KEY, KEY_DOWN }}},
-    {"right", {{InputType::KEY, KEY_D}, {InputType::KEY, KEY_RIGHT}}}
+    {"Swap Weapon", {{InputType::KEY, KEY_SPACE}}},
+
+    {"Up",    {{InputType::KEY, KEY_W}, {InputType::KEY, KEY_UP   }}},
+    {"Left",  {{InputType::KEY, KEY_A}, {InputType::KEY, KEY_LEFT }}},
+    {"Down",  {{InputType::KEY, KEY_S}, {InputType::KEY, KEY_DOWN }}},
+    {"Right", {{InputType::KEY, KEY_D}, {InputType::KEY, KEY_RIGHT}}}
 };
 
 // Check if an input is being held right now

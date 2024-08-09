@@ -189,6 +189,7 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
     else
         built_chunks[chunk_pos].clear();
     
+    // Clears the collider chunk
     if (collider_chunks.find(chunk_pos) == collider_chunks.end()) {
         collider_chunks[chunk_pos] = {};
     } else {
