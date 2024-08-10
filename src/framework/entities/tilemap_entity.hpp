@@ -24,6 +24,13 @@ typedef struct {
     float g_cost, h_cost;
 } PathNode;
 
+enum class ColliderBuildMode {
+    INNER,
+    OUTER,
+    NONE,
+    COUNT,
+};
+
 using json = nlohmann::json;
 
 typedef struct {
@@ -67,6 +74,7 @@ private:
     ColliderChunkMap collider_chunks;
 
 public:
+    ColliderBuildMode collider_mode;
     Vector2 tilesize;
     Vector2 chunksize;
     TilemapRenderer renderer;

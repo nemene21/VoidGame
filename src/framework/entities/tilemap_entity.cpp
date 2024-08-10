@@ -3,6 +3,7 @@
 Tilemap::Tilemap(Vector2 tilesize, std::string texture_path):
     texture {TextureManager::get(texture_path)},
     tiledata {},
+    collider_mode {ColliderBuildMode::NONE},
     built_chunks {},
     changed_chunks {},
     tilesize {tilesize},
@@ -211,12 +212,40 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
         corners.insert({pos.first +.5f, pos.second -.5f, tile.second.type});
         corners.insert({pos.first -.5f, pos.second +.5f, tile.second.type});
 
-        // Tile's collider, position and texture position data
-        auto collider = new ColliderComponent(this, Vector2{pos.first, pos.second} * tilesize, tilesize.x, tilesize.y);
-        collider->add_layer((int)ColliderIndex::TILEMAP);
-        collider->process(0);
+        if (collider_mode == ColliderBuildMode::INNER) {
+            // Tile's collider, position and texture position data
+            auto collider = new ColliderComponent(this, Vector2{pos.first, pos.second} * tilesize, tilesize.x, tilesize.y);
+            collider->add_layer((int)ColliderIndex::TILEMAP);
+            collider->process(0);
+            colliders.push_back(collider);
+            std::cout << "the sigma?" << std::endl;
 
-        colliders.push_back(collider);
+        } else if (collider_mode == ColliderBuildMode::OUTER) {
+            if (get_tile(pos.first - 1, pos.second) == -1) {
+                auto collider = new ColliderComponent(this, Vector2{pos.first - 1, pos.second} * tilesize, tilesize.x, tilesize.y);
+                collider->add_layer((int)ColliderIndex::TILEMAP);
+                collider->process(0);
+                colliders.push_back(collider);
+            }
+            if (get_tile(pos.first + 1, pos.second) == -1) {
+                auto collider = new ColliderComponent(this, Vector2{pos.first + 1, pos.second} * tilesize, tilesize.x, tilesize.y);
+                collider->add_layer((int)ColliderIndex::TILEMAP);
+                collider->process(0);
+                colliders.push_back(collider);
+            }
+            if (get_tile(pos.first, pos.second - 1) == -1) {
+                auto collider = new ColliderComponent(this, Vector2{pos.first, pos.second - 1} * tilesize, tilesize.x, tilesize.y);
+                collider->add_layer((int)ColliderIndex::TILEMAP);
+                collider->process(0);
+                colliders.push_back(collider);
+            }
+            if (get_tile(pos.first, pos.second + 1) == -1) {
+                auto collider = new ColliderComponent(this, Vector2{pos.first, pos.second + 1} * tilesize, tilesize.x, tilesize.y);
+                collider->add_layer((int)ColliderIndex::TILEMAP);
+                collider->process(0);
+                colliders.push_back(collider);
+            }
+        }
     }
 
     for (std::tuple<float, float, int> corner_data: corners) {

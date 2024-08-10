@@ -1,7 +1,6 @@
 #include "game.hpp"
 
 GameScene::GameScene(): Scene("game_scene") {
-
     unpackers[(int)PacketType::GENERATION] = [this](Packet* packet) {
         auto cast_packet = reinterpret_cast<GenerationPacket*>(packet);
         generate_level(cast_packet->seed);
@@ -10,6 +9,7 @@ GameScene::GameScene(): Scene("game_scene") {
 
 void GameScene::restart() {
     floor_tilemap = new Tilemap({24, 24}, "test_tileset.png");
+    floor_tilemap->collider_mode = ColliderBuildMode::OUTER;
     floor_tilemap->renderer.z_coord = -5;
     add_entity(floor_tilemap);
 }
