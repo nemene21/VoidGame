@@ -24,13 +24,18 @@ void Gun::process(float delta) {
 }
 
 void Gun::private_process(float delta) {
+    // Calculates gun angle based on mouse pos
     Vector2 player_pos = get_player_pos();
     Vector2 diff = mouse_pos() - player_pos;
 
     float angle = atan2(diff.y, diff.x);
     trans_comp->angle = angle * RAD2DEG;
 
+    // Interpolates position towards player
     trans_comp->position = Lerpi(
         trans_comp->position,
         player_pos - Vector2{0.f, height}, 15);
+    
+    // Z layering
+    sprite.z_coord = (int)(player_pos.y < mouse_pos().y);
 }

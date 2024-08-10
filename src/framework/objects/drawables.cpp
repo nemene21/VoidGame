@@ -242,7 +242,8 @@ void Drawable::update_transform(TransformComponent *trans_comp) {
 }
 
 Vector2 Drawable::real_pos() {
-    return Vector2Add(position, Vector2Multiply(offset, scale));
+    auto rotated_offset = Vector2Rotate(Vector2Multiply(offset, scale), angle * DEG2RAD);
+    return Vector2Add(position, rotated_offset);
 }
 
 // <Drawable Manager>
