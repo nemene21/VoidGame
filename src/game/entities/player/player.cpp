@@ -52,6 +52,7 @@ Player::Player(): Actor("test_guy.png", half_res, 100),
     add_component(camera_comp);
 
     join_group("Player");
+    set_name("Player");
 }
 
 void Player::process(float delta) {

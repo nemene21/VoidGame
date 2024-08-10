@@ -3,7 +3,7 @@
 // Projectile factory, for easy projectile instancing
 PlayerProjectileFactory::ProjectileCreateFunction
     PlayerProjectileFactory::registry[(int)PlayerProjectileType::COUNT];
-    
+
 // This adds projectiles to the registry
 void PlayerProjectileFactory::setup(PlayerProjectileType key, ProjectileCreateFunction func) {
     registry[(int)key] = func;
@@ -64,6 +64,7 @@ void ProjectileWeapon::private_process(float delta) {
 }
 
 void ProjectileWeapon::shoot() {
+    on_shot.emit(this);
     burst_on = 0;
     burst_timer = 0;
 

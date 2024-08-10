@@ -21,6 +21,7 @@ Weapon::Weapon(int player_id, float firerate, bool automatic, std::string textur
 
     trans_comp = new TransformComponent(this, {0, 0});
     add_component(trans_comp);
+    set_name("Player Weapon");
 }
 
 Vector2 Weapon::get_player_pos() {
