@@ -21,8 +21,12 @@ Gun::Gun(int player_id, float firerate, float burst_delay, bool automatic, std::
 }
 
 void Gun::process(float delta) {
+    // Position
     sprite.update_transform(trans_comp);
     sprite.offset.x = player_dist;
+    
+    // Z layering
+    sprite.z_coord = (int)(trans_comp->angle > 0);
 }
 
 void Gun::start_update() {
@@ -48,9 +52,6 @@ void Gun::private_process(float delta) {
     trans_comp->position = Lerpi(
         trans_comp->position,
         player_pos - Vector2{0.f, height}, 30);
-    
-    // Z layering
-    sprite.z_coord = (int)(player_pos.y < mouse_pos().y);
 
     // Flipping gun when on left
     trans_comp->scale.y = mouse_pos().x > player_pos.x ? 1 : -1;
