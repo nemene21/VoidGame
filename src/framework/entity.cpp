@@ -24,6 +24,22 @@ void Entity::network_update_components() {
     }
 }
 
+void Entity::start_update() {}
+void Entity::start_update_recieve(EntityStartUpdatePacket* packet) {}
+
+void Entity::texture_update(std::string texture_name) {
+    auto packet = EntityTextureUpdatePacket{
+        PacketType::ENTITY_START_UPDATE,
+        true,
+        id,
+        ""
+    };
+    const char* texture_name_cstr = texture_name.c_str();
+    strcpy(packet.texture, texture_name_cstr);
+    
+    Networking::send(&packet, sizeof(packet), true);
+}
+
 std::string Entity::get_name() {
     return name;
 }

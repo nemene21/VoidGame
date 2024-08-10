@@ -12,6 +12,9 @@ public:
     Gun(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern);
     void process(float delta);
     void private_process(float delta);
+
+    void start_update();
+    void start_update_recieve(EntityStartUpdatePacket* packet);
 };
 
 #endif

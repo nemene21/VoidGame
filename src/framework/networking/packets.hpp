@@ -7,6 +7,7 @@
 
 enum class EntityType: uint16_t {
     PLAYER,
+    GUN,
     COUNT,
 };
 
@@ -14,6 +15,7 @@ enum class PacketType: uint8_t  {
     LOG,
     ENTITY_SYNC,
     ENTITY_NUKE,
+    ENTITY_START_UPDATE,
     COMPONENT_UPDATE,
     GENERATION,
     COUNT,
@@ -28,16 +30,15 @@ struct LogPacket: public Packet {
     char message[256];
 };
 
+// Component packets
 struct ComponentUpdatePacket: public Packet {
     uint32_t entity_id;
     uint8_t  component_type;
 };
-
 struct TransformUpdatePacket: public ComponentUpdatePacket {
     Vector2 position, velocity, scale;
     float angle;
 };
-
 struct AnimationUpdatePacket: public ComponentUpdatePacket {
     bool paused;
     int8_t direction;
@@ -50,9 +51,15 @@ struct EntitySyncPacket: public Packet {
     uint32_t id;
     bool owned;
 };
-
 struct EntityNukePacket: public Packet {
     uint32_t id;
+};
+
+struct EntityStartUpdatePacket: public Packet {
+    uint32_t id;
+};
+struct EntityTextureUpdatePacket: public EntityStartUpdatePacket {
+    char texture[16];
 };
 
 struct GenerationPacket: public Packet {

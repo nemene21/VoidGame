@@ -70,6 +70,8 @@ namespace Networking {
 
             ENetPacket* packet = enet_packet_create(&sync_packet, sizeof(sync_packet), ENET_PACKET_FLAG_RELIABLE);
             enet_peer_send(peer, 0, packet);
+
+            entity->start_update();
         }
     }
 

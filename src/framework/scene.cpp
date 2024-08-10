@@ -1,4 +1,5 @@
 #include <scene.hpp>
+#include <entities/weapons/guns/gun.hpp>
 
 // <Scene>
 Scene::Scene(std::string name): name {name}, entities {}, entities_by_name {}, entities_by_id {} {
@@ -92,6 +93,8 @@ void Scene::add_synced_entity(Entity* entity, bool owned) {
     entity->id = id;
     add_entity(entity);
     sync_entity(entity);
+
+    entity->start_update();
 }
 
 std::vector<Entity*> Scene::query_in_group(std::string name) {
@@ -171,6 +174,10 @@ Entity* type_entity(EntityType type) {
         case EntityType::PLAYER:
             return new Player();
             break;
+        
+        case EntityType::GUN:
+            return new Gun(0, 0, 0, false, "test_gun.png", {});
+            break;
             
         default:
             std::cerr << "Entity type to sync not defined :(" << std::endl;
@@ -208,7 +215,11 @@ void SceneManager::init() {
     unpackers[(int)PacketType::ENTITY_NUKE] = [](Packet* packet) {
         auto nuke_packet = reinterpret_cast<EntityNukePacket*>(packet);
         SceneManager::scene_on->get_entity_by_id(nuke_packet->id)->queue_free();
-
-        std::cout << "oughta delet entitet" << std::endl;
+    };
+    unpackers[(int)PacketType::ENTITY_START_UPDATE] = [](Packet* packet) {
+        auto update_packet = reinterpret_cast<EntityStartUpdatePacket*>(packet);
+        SceneManager::scene_on->get_entity_by_id(update_packet->id)->start_update_recieve(
+            update_packet
+        );
     };
 }

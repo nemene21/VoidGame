@@ -7,12 +7,14 @@
 #include <particles.hpp>
 #include <input.hpp>
 #include <scene.hpp>
+#include <networking/networking.hpp>
 
 #define WEAPON_INTRO_SPEED 8.f
 
 class Weapon: public Entity {
 public:
     Sprite sprite;
+    std::string texture_name;
     int player_id;
     float intro_anim;
     bool active;

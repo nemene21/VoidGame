@@ -3,6 +3,7 @@
 
 Weapon::Weapon(int player_id, float firerate, bool automatic, std::string texture):
     sprite {Sprite(texture)},
+    texture_name {texture},
     player_id {player_id},
     intro_anim {0},
     active {true},
@@ -18,7 +19,7 @@ Weapon::Weapon(int player_id, float firerate, bool automatic, std::string textur
     });
     add_component(timer_comp);
 
-    trans_comp = new TransformComponent(this, get_player_pos());
+    trans_comp = new TransformComponent(this, {0, 0});
     add_component(trans_comp);
 }
 
