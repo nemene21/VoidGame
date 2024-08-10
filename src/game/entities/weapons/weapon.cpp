@@ -1,11 +1,12 @@
 #include "weapon.hpp"
 #include <scene.hpp>
 
-Weapon::Weapon(int player_id, float firerate, std::string texture):
+Weapon::Weapon(int player_id, float firerate, bool automatic, std::string texture):
     sprite {Sprite(texture)},
     player_id {player_id},
     intro_anim {0},
     active {true},
+    automatic {automatic},
     reloaded {true}
     {
 
@@ -26,7 +27,7 @@ Vector2 Weapon::get_player_pos() {
         ->get_component(CompType::TRANSFORM))->position;
 }
 
-void Weapon::process(float delta) {
+void Weapon::private_process(float delta) {
     if (active) {
         // Increment spawn animation
         intro_anim = fminf(1, intro_anim + delta * WEAPON_INTRO_SPEED);
@@ -42,4 +43,9 @@ void Weapon::process(float delta) {
     // Scale spawn animation
     float blend = Easing::back_in(intro_anim);
     trans_comp->scale = {blend, blend};
+}
+
+// Takes care of automatic/non automatic cases
+bool Weapon::trying_to_shoot() {
+    return ((automatic && IsPressed("Shoot")) || (!automatic && IsJustPressed("Shoot")));
 }

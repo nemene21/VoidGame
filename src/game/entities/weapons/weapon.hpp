@@ -6,6 +6,7 @@
 #include <sprites.hpp>
 #include <particles.hpp>
 #include <input.hpp>
+#include <scene.hpp>
 
 #define WEAPON_INTRO_SPEED 8.f
 
@@ -15,15 +16,18 @@ public:
     int player_id;
     float intro_anim;
     bool active;
+    bool automatic;
 
     TransformComponent* trans_comp;
 
     TimerComponent* timer_comp;
     bool reloaded;
 
-    Weapon(int player_id, float firerate, std::string texture);
+    bool trying_to_shoot();
+
+    Weapon(int player_id, float firerate, bool automatic, std::string texture);
     Vector2 get_player_pos();
-    void process(float delta);
+    void private_process(float delta);
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include <entities/weapons/guns/test_gun.hpp>
 
 Player::Player(): Actor("test_guy.png", half_res, 100),
     run_particles {ParticleSystem("player_run.json")} {
@@ -81,4 +82,9 @@ void Player::private_process(float delta) {
     anim_comp->play(animation);
 
     look_dir = mouse_pos().x > trans_comp->position.x ? 1 : -1;
+
+    // Weapon swapping
+    if (IsJustPressed("Swap Weapon")) {
+        SceneManager::scene_on->add_synced_entity(create_test_gun(id), true);
+    }
 }
