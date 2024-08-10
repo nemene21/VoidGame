@@ -30,13 +30,17 @@ Vector2 Weapon::get_player_pos() {
 }
 
 void Weapon::private_process(float delta) {
+    if (intro_anim == 0) {
+        trans_comp->position = get_player_pos();
+    }
+
     if (active) {
+        if (IsJustPressed("Swap Weapon") && intro_anim != 0) {
+            active = false;
+        }
         // Increment spawn animation
         intro_anim = fminf(1, intro_anim + delta * WEAPON_INTRO_SPEED);
 
-        if (IsJustPressed("Swap Weapon")) {
-            active = false;
-        }
     } else {
         // Decrement spawn animation and kill the entity when it reaches 0
         intro_anim = fmaxf(0, intro_anim - delta * WEAPON_INTRO_SPEED);

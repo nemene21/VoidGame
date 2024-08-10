@@ -18,7 +18,7 @@ ProjectileWeapon::ProjectileWeapon(int player_id, float firerate, float burst_de
     Weapon(player_id, firerate, automatic, texture),
     burst_timer {0},
     burst_delay {burst_delay},
-    burst_on {0},
+    burst_on {pattern.size()},
     shoot_angle {0}
     {
     burst = pattern;

@@ -41,6 +41,8 @@ void Gun::private_process(float delta) {
     if (!SceneManager::scene_on->has_entity_id(player_id)) {
         return;
     }
+    ProjectileWeapon::private_process(delta);
+    
     // Calculates gun angle based on mouse pos
     Vector2 diff = mouse_pos() - trans_comp->position;
     float angle = atan2(diff.y, diff.x);
