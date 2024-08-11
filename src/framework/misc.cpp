@@ -4,6 +4,19 @@ Vector2 res {320, 180};
 Vector2 half_res = Vector2Multiply(res, {.5f, .5f});
 float res_diagonal = sqrtf(res.x*res.x + res.y*res.y);
 
+template<typename Type, typename FunctionType>
+Factory<Type, FunctionType>::Factory(int count): registry(count) {}
+
+template<typename Type, typename FunctionType>
+void Factory<Type, FunctionType>::setup(int index, FunctionType func) {
+    registry[index] = func;
+}
+
+template<typename Type, typename FunctionType>
+FunctionType Factory<Type, FunctionType>::get(int index) {
+    return registry[index];
+}
+
 Color Float4ToColor(float* arr) {
     return Color{
         (unsigned char)(arr[0] * 255),

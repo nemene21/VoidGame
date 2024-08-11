@@ -35,8 +35,20 @@ int rand64();
 std::ostream& operator<<(std::ostream& str, Vector2 vec);
 std::ostream& operator<<(std::ostream& str, Color col);
 
+// Generic factory object
+template<typename Type, typename FunctionType>
+class Factory {
+private:
+    std::vector<FunctionType> registry;
 
-// Bomboclat
+public:
+    Factory(int count);
+
+    void setup(int index, FunctionType func);
+    FunctionType get(int index);
+};
+
+// Vector2 operator overloads
 bool operator>(Vector2 first, Vector2 other);
 bool operator<(Vector2 first, Vector2 other);
 bool operator==(Vector2 first, Vector2 other);
