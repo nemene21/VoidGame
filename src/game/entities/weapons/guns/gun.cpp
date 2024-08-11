@@ -11,6 +11,7 @@ Gun::Gun(int player_id, float firerate, float burst_delay, bool automatic, std::
     anim_comp = new AnimationComponent(this);
     anim_comp->make_animation("shoot", 0.2f, false);
     anim_comp->add_keyframe("shoot", 0, 0.2, [this](float anim) {
+        anim = Easing::ease_in_out(anim);
         sprite.offset.x = player_dist - sin(anim*PI) * recoil_anim_strength;
     });
     add_component(anim_comp);

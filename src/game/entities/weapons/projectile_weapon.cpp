@@ -13,11 +13,11 @@ ProjectileWeapon::ProjectileWeapon(int player_id, float firerate, float burst_de
 }
 
 void ProjectileWeapon::spawn_projectile(PlayerShot& data, float angle) {
-    angle = data.angle + (RandF2() * data.spread) + angle;
+    angle = data.angle + (RandF2() * data.spread * DEG2RAD) + angle;
 
     // Builds projectile with angle and spread
     PlayerProjectile* projectile = projectile_factory.get((int)data.projectile_key)(
-        sprite.position + sprite.offset,
+        sprite.position + Vector2Rotate(sprite.offset, sprite.angle*DEG2RAD),
         Vector2Rotate({400, 0}, angle)
     );
     // Instantiates for all players

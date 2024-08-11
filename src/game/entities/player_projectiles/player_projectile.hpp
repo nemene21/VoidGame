@@ -13,6 +13,7 @@ public:
     AreaComponent* area_comp;
     PlayerProjectile(Vector2 pos, Vector2 vel, float width, std::string texture);
     void process(float delta);
+    void private_process(float delta);
 };
 
 #endif
