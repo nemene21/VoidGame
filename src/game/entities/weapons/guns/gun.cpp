@@ -49,6 +49,8 @@ void Gun::private_process(float delta) {
     float angle = atan2(diff.y, diff.x);
     trans_comp->angle = angle * RAD2DEG;
 
+    shoot_angle = trans_comp->angle;
+
     // Interpolates position towards player
     Vector2 player_pos = get_player_pos();
 

@@ -32,10 +32,9 @@ void ProjectileWeapon::spawn_projectiles() {
     // For every bullet type in pattern
     for (auto data: burst[burst_on]) {
         for (int i = 0; i < data.amount; i++) {
-            spawn_projectile(data, shoot_angle);
+            spawn_projectile(data, shoot_angle * DEG2RAD);
         }
     }
-
     burst_on++;
 }
 
