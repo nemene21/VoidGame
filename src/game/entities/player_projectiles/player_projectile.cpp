@@ -3,6 +3,8 @@
 PlayerProjectile::PlayerProjectile(Vector2 pos, Vector2 vel, float width, std::string texture):
     sprite {Sprite(texture)}
     {
+    type = EntityType::PLAYER_PROJECTILE;
+
     trans_comp = new TransformComponent(this, pos);
     trans_comp->velocity = vel;
     add_component(trans_comp);

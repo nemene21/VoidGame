@@ -87,9 +87,11 @@ void Scene::sync_entity(Entity* entity) {
     Networking::send(&packet, sizeof(packet), true);
 }
 
+auto synced_entity_factory = Factory<Entity, std::function<Entity*(void)>>((int)EntityType::COUNT);
+
 void Scene::add_synced_entity(Entity* entity, bool owned) {
     int id = get_valid_entity_id();
-    
+
     entity->id = id;
     add_entity(entity);
     sync_entity(entity);
@@ -186,9 +188,17 @@ Entity* type_entity(EntityType type) {
 }
 
 void SceneManager::init() {
+    synced_entity_factory.setup((int)EntityType::PLAYER, []() { return new Player(); });
+    synced_entity_factory.setup((int)EntityType::GUN, []() {
+        return new Gun(0, 0, 0, false, "test_gun.png", {});
+    });
+    synced_entity_factory.setup((int)EntityType::PLAYER_PROJECTILE, []() {
+        return new PlayerProjectile({0, 0}, {0, 0}, 0, "test_bullet.png");
+    });
+
     unpackers[(int)PacketType::ENTITY_SYNC] = [](Packet* packet) {
         auto sync_packet = reinterpret_cast<EntitySyncPacket*>(packet);
-        Entity* entity = type_entity(sync_packet->entity_type);
+        Entity* entity = synced_entity_factory.get((int)sync_packet->entity_type)();
 
         if (!sync_packet->owned && Networking::is_host) {
             entity->owned = true;
