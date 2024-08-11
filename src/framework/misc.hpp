@@ -24,9 +24,12 @@ std::string roman_numeral(int num);
 
 bool operator==(Color first, Color other);
 
+/// @brief Converts a float[4] into a Color struct instance
 Color Float4ToColor(float* arr);
 
+/// @return Random 32 bit integer
 int rand32();
+/// @return Random 64 bit integer
 int rand64();
 
 std::ostream& operator<<(std::ostream& str, Vector2 vec);
