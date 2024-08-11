@@ -11,6 +11,11 @@
 
 #define WEAPON_INTRO_SPEED 8.f
 
+enum class WeaponID {
+    TEST,
+    COUNT,
+};
+
 class Weapon: public Entity {
 public:
     Sprite sprite;

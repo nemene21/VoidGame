@@ -11,6 +11,9 @@ public:
     Player();
     void process(float delta);
     void private_process(float delta);
+    
+    static void init_weapons();
+    static void init_projectiles();
 };
 
 #endif

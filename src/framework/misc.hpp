@@ -42,10 +42,15 @@ private:
     std::vector<FunctionType> registry;
 
 public:
-    Factory(int count);
+    Factory(int count): registry(count) {}
 
-    void setup(int index, FunctionType func);
-    FunctionType get(int index);
+    void setup(int index, FunctionType func) {
+        registry[index] = func;
+    }
+
+    FunctionType get(int index) {
+        return registry[index];
+    }
 };
 
 // Vector2 operator overloads

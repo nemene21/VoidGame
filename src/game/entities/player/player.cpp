@@ -1,5 +1,7 @@
 #include "player.hpp"
-#include <entities/weapons/guns/test_gun.hpp>
+#include <entities/weapons/guns/gun.hpp>
+
+auto weapon_factory = Factory<Weapon, std::function<Weapon*(int)>>((int)WeaponID::COUNT);
 
 Player::Player(): Actor("test_guy.png", half_res, 100),
     run_particles {ParticleSystem("player_run.json")} {
@@ -86,6 +88,26 @@ void Player::private_process(float delta) {
 
     // Weapon swapping
     if (IsJustPressed("Swap Weapon")) {
-        SceneManager::scene_on->add_synced_entity(create_test_gun(id), true);
+        auto weapon = weapon_factory.get((int)WeaponID::TEST)(id);
+        SceneManager::scene_on->add_synced_entity(weapon, true);
     }
+}
+
+void Player::init_projectiles() {
+    projectile_factory.setup((int)PlayerProjectileType::BASE_BULLET,
+        [](Vector2 pos, Vector2 vel) -> PlayerProjectile* {
+        auto projectile = new PlayerProjectile(pos, vel, 8, "test_bullet.png");
+        return projectile;
+    });
+}
+
+void Player::init_weapons() {
+    weapon_factory.setup((int)WeaponID::TEST, [](int player_id) -> Weapon* {
+        auto gun = new Gun(player_id, 2.f, 0.1f, true, (std::string)"test_gun.png", ShotPattern{
+            {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
+            {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
+            {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}}
+        });
+        return gun;
+    });
 }

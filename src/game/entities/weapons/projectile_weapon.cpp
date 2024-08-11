@@ -1,18 +1,6 @@
 #include "projectile_weapon.hpp"
 
-// Projectile factory, for easy projectile instancing
-PlayerProjectileFactory::ProjectileCreateFunction
-    PlayerProjectileFactory::registry[(int)PlayerProjectileType::COUNT];
-
-// This adds projectiles to the registry
-void PlayerProjectileFactory::setup(PlayerProjectileType key, ProjectileCreateFunction func) {
-    registry[(int)key] = func;
-}
-
-// This returns a projectile object constructed by a function in the registry
-PlayerProjectile* PlayerProjectileFactory::create_projectile(PlayerProjectileType key, float angle) {
-    return registry[(int)key](angle);
-}
+ProjectileFactory projectile_factory = ProjectileFactory((int)PlayerProjectileType::COUNT);
 
 ProjectileWeapon::ProjectileWeapon(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern):
     Weapon(player_id, firerate, automatic, texture),
@@ -24,11 +12,13 @@ ProjectileWeapon::ProjectileWeapon(int player_id, float firerate, float burst_de
     burst = pattern;
 }
 
-void spawn_projectile(PlayerShot& data, float angle) {
+void ProjectileWeapon::spawn_projectile(PlayerShot& data, float angle) {
+    angle = data.angle + (RandF2() * data.spread) + angle;
+
     // Builds projectile with angle and spread
-    PlayerProjectile* projectile = PlayerProjectileFactory::create_projectile(
-        data.projectile_key,
-        data.angle + (RandF2() * data.spread) + angle
+    PlayerProjectile* projectile = projectile_factory.get((int)data.projectile_key)(
+        sprite.position + sprite.offset,
+        Vector2Rotate({400, 0}, angle)
     );
     // Instantiates for all players
     SceneManager::scene_on->add_synced_entity(projectile, false);

@@ -8,14 +8,9 @@ enum class PlayerProjectileType {
     COUNT,
 };
 
-class PlayerProjectileFactory {
-public:
-    typedef std::function<PlayerProjectile*(float angle)> ProjectileCreateFunction;
-    static ProjectileCreateFunction registry[(int)PlayerProjectileType::COUNT];
+typedef Factory<PlayerProjectile, std::function<PlayerProjectile*(Vector2 pos, Vector2 vel)>> ProjectileFactory;
 
-    static void setup(PlayerProjectileType key, ProjectileCreateFunction func);
-    static PlayerProjectile* create_projectile(PlayerProjectileType key, float angle);    
-};
+extern ProjectileFactory projectile_factory;
 
 struct PlayerShot {
     PlayerProjectileType projectile_key;
@@ -40,6 +35,7 @@ public:
     ProjectileWeapon(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern);
     void shoot();
     void spawn_projectiles();
+    void spawn_projectile(PlayerShot& data, float angle);
     void private_process(float delta);
 };
 

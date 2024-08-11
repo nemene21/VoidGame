@@ -5,6 +5,9 @@ GameScene::GameScene(): Scene("game_scene") {
         auto cast_packet = reinterpret_cast<GenerationPacket*>(packet);
         generate_level(cast_packet->seed);
     };
+
+    Player::init_weapons();
+    Player::init_projectiles();
 }
 
 void GameScene::restart() {
