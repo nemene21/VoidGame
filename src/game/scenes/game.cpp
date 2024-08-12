@@ -65,12 +65,19 @@ std::set<Vector2> GameScene::generate_floor_tiles() {
     std::set<Vector2> tiles {};
     int steps = 0;
     Vector2 walker_pos = {0, 0};
+    Vector2 walker_dir = {1, 0};
+
+    Vector2 dirs[] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+    walker_dir = dirs[rand()%4];
 
     while (steps < 256) {
-        steps++;
-        walker_pos += Vector2Rotate({1, 0}, PI * 0.5 * (rand()%4));
-
         tiles.insert(walker_pos);
+
+        steps++;
+        walker_pos += walker_dir;
+
+        if (RandF() < 0.5f)
+            walker_dir = dirs[rand()%4];
     }
     return tiles;
 }

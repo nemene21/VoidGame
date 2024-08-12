@@ -3,7 +3,7 @@
 
 auto weapon_factory = Factory<Weapon, std::function<Weapon*(int)>>((int)WeaponID::COUNT);
 
-Player::Player(): Actor("test_guy.png", half_res, 100),
+Player::Player(): Actor("test_guy.png", {0, 0}, 100),
     run_particles {ParticleSystem("player_run.json")} {
     type = EntityType::PLAYER;
     
@@ -51,6 +51,7 @@ Player::Player(): Actor("test_guy.png", half_res, 100),
     add_component(collider_comp);
 
     camera_comp = new CameraComponent(this);
+    // camera_comp->set_zoom(0.5f);
     add_component(camera_comp);
 
     join_group("Player");
