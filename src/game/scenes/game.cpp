@@ -21,7 +21,7 @@ void GameScene::process(float delta) {
     if (Networking::active()) {
         Networking::process();
 
-        if (IsKeyDown(KEY_G) && Networking::is_host) {
+        if (IsKeyPressed(KEY_G) && Networking::is_host) {
             generate_level(rand64());
         }
 
@@ -71,12 +71,11 @@ std::set<Vector2> GameScene::generate_floor_tiles() {
     walker_dir = dirs[rand()%4];
 
     while (steps < 256) {
-        tiles.insert(walker_pos);
 
-        steps++;
+        tiles.insert(walker_pos);
         walker_pos += walker_dir;
 
-        if (RandF() < 0.5f)
+        if (RandF() < 0.33f)
             walker_dir = dirs[rand()%4];
     }
     return tiles;
