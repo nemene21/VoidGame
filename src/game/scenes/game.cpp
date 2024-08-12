@@ -71,6 +71,8 @@ std::set<Vector2> GameScene::generate_floor_tiles() {
     walker_dir = dirs[rand()%4];
 
     while (steps < 256) {
+        if (tiles.find(walker_pos) == tiles.end())
+            steps++;
 
         tiles.insert(walker_pos);
         walker_pos += walker_dir;
