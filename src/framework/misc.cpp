@@ -71,11 +71,17 @@ std::ostream& operator<<(std::ostream& str, Color col) {
 }
 
 bool operator>(Vector2 first, Vector2 other) {
-    return Vector2Length(first) > Vector2Length(other);
+    if (first.x > other.x)
+        return true;
+    if (first.x < other.x)
+        return false;
+    if (first.y > other.y)
+        return true;
+    return false;
 }
 
 bool operator<(Vector2 first, Vector2 other) {
-    return Vector2Length(first) < Vector2Length(other);
+    return other > first;
 }
 
 bool operator==(Vector2 first, Vector2 other) {
