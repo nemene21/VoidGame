@@ -16,9 +16,6 @@ uniform sampler2D texture0;
 uniform float time;
 
 uniform sampler2D noise_texture;
-const float noise_zoom = 0.5;
-const float noise_strength = 0.0;
-const float noise_anim_speed = 6.0;
 
 uniform vec2 camera_offset;
 uniform float aspect_ratio;
@@ -46,19 +43,10 @@ void main() {
     // -- Vignette
     float vignette = (1.0 - dist) * vignette_multiplier;
 
-    vignette += vignette_add + rand(warped_uv) * 0.02;
+    vignette += vignette_add + rand(warped_uv + time ) * 0.02;
     vignette = pow(vignette * vignette_multiplier, vignette_exp);
     vignette = max(min(vignette, 1.0), 0.0);
 
-    // -- Noise offset
-    float noise_anim = floor(time * noise_anim_speed);
-     
-    vec2 noise_ofst = texture2D(noise_texture,
-        (fragTexCoord + camera_offset) * noise_zoom + rand(vec2(noise_anim, noise_anim))
-
-    ).rg * noise_strength;
-
-    warped_uv += noise_ofst;
     vec3 center = texture2D(texture0, warped_uv).rgb;
     vec3 up     = texture2D(texture0, warped_uv + vec2(0, -sharpness_offset * aspect_ratio)).rgb;
     vec3 down   = texture2D(texture0, warped_uv + vec2(0,  sharpness_offset * aspect_ratio)).rgb;
