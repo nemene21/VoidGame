@@ -18,6 +18,9 @@ Gun::Gun(int player_id, float firerate, float burst_delay, bool automatic, std::
 
     on_shot.connect([this](Entity* ent) {
         anim_comp->play("shoot");
+        auto camera_comp = ((Player*)SceneManager::scene_on->get_entity_by_id(this->player_id))
+            ->camera_comp;
+        camera_comp->shake(4, 0.1, this->trans_comp->angle * DEG2RAD + PI);
     });
 }
 
