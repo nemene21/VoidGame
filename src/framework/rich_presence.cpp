@@ -1,7 +1,7 @@
 #include <rich_presence.hpp>
 
 std::string presence_title   = "...";
-std::string presence_details = "Developing...";
+std::string presence_details = "Making the game or playtesting";
 float presence_time_start    = time(NULL);
 
 void handle_ready(const DiscordUser* connectedUser) {
@@ -13,7 +13,7 @@ void RichPresence::init() {
     memset(&handlers, 0, sizeof(handlers));
     handlers.ready = handle_ready;
 
-    Discord_Initialize("1261279643965591646", &handlers, 1, NULL);
+    Discord_Initialize("1272535399570346097", &handlers, 1, NULL);
     printf("DISCORD RPC INITIALISED\n");
 }
 
