@@ -16,7 +16,6 @@ enum class PacketType: uint8_t  {
     LOG,
     ENTITY_SYNC,
     ENTITY_NUKE,
-    ENTITY_START_UPDATE,
     COMPONENT_UPDATE,
     GENERATION,
     COUNT,
@@ -52,15 +51,11 @@ struct EntitySyncPacket: public Packet {
     uint32_t id;
     bool owned;
 };
+struct EntityTextureSyncPacket: public EntitySyncPacket {
+    char texture[16];
+};
 struct EntityNukePacket: public Packet {
     uint32_t id;
-};
-
-struct EntityStartUpdatePacket: public Packet {
-    uint32_t id;
-};
-struct EntityTextureUpdatePacket: public EntityStartUpdatePacket {
-    char texture[16];
 };
 
 struct GenerationPacket: public Packet {

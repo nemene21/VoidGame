@@ -60,18 +60,23 @@ namespace Networking {
             Entity* entity = ent_pair.second;
             ENetPeer* peer = event.peer;
 
-            auto sync_packet = EntitySyncPacket{
-                PacketType::ENTITY_SYNC,
-                false,
-                entity->type,
-                entity->id,
-                false
-            };
+            auto sync_packet_data = entity->get_init_packet();
+            if (sync_packet_data.first == nullptr) {
+                auto sync_packet = EntitySyncPacket{
+                    PacketType::ENTITY_SYNC,
+                    true,
+                    entity->type,
+                    entity->id,
+                    entity->owned
+                };
+                ENetPacket* packet = enet_packet_create(&sync_packet, sizeof(sync_packet), ENET_PACKET_FLAG_RELIABLE);
+                enet_peer_send(peer, 0, packet);
 
-            ENetPacket* packet = enet_packet_create(&sync_packet, sizeof(sync_packet), ENET_PACKET_FLAG_RELIABLE);
-            enet_peer_send(peer, 0, packet);
-
-            entity->start_update();
+            } else {
+                ENetPacket* packet = enet_packet_create(sync_packet_data.first, sync_packet_data.second, ENET_PACKET_FLAG_RELIABLE);
+                enet_peer_send(peer, 0, packet);
+            }
+            delete sync_packet_data.first;
         }
     }
 

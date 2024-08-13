@@ -77,17 +77,25 @@ int Scene::get_valid_entity_id() {
 }
 
 void Scene::sync_entity(Entity* entity) {
-    auto packet = EntitySyncPacket{
-        PacketType::ENTITY_SYNC,
-        true,
-        entity->type,
-        entity->id,
-        entity->owned
-    };
-    Networking::send(&packet, sizeof(packet), true);
+    auto packet_data = entity->get_init_packet();
+
+    if (packet_data.first != nullptr)
+        Networking::send(packet_data.first, packet_data.second, true);
+
+    else {
+        auto packet = EntitySyncPacket{
+            PacketType::ENTITY_SYNC,
+            true,
+            entity->type,
+            entity->id,
+            entity->owned
+        };
+        Networking::send(&packet, sizeof(packet), true);
+    }
+    delete packet_data.first;
 }
 
-auto synced_entity_factory = Factory<Entity, std::function<Entity*(void)>>((int)EntityType::COUNT);
+auto synced_entity_factory = Factory<Entity, std::function<Entity*(EntitySyncPacket*)>>((int)EntityType::COUNT);
 
 void Scene::add_synced_entity(Entity* entity, bool owned) {
     int id = get_valid_entity_id();
@@ -95,8 +103,6 @@ void Scene::add_synced_entity(Entity* entity, bool owned) {
     entity->id = id;
     add_entity(entity);
     sync_entity(entity);
-
-    entity->start_update();
 }
 
 std::vector<Entity*> Scene::query_in_group(std::string name) {
@@ -188,17 +194,27 @@ Entity* type_entity(EntityType type) {
 }
 
 void SceneManager::init() {
-    synced_entity_factory.setup((int)EntityType::PLAYER, []() { return new Player(); });
-    synced_entity_factory.setup((int)EntityType::GUN, []() {
-        return new Gun(0, 0, 0, false, "test_gun.png", {});
+    synced_entity_factory.setup((int)EntityType::PLAYER,
+    [](EntitySyncPacket* packet)
+        { return new Player(); });
+
+    synced_entity_factory.setup((int)EntityType::GUN,
+    [](EntitySyncPacket* packet) {
+        auto cast_packet = reinterpret_cast<EntityTextureSyncPacket*>(packet);
+        return new Gun(0, 0, 0, false, cast_packet->texture, {});
     });
-    synced_entity_factory.setup((int)EntityType::PLAYER_PROJECTILE, []() {
-        return new PlayerProjectile({0, 0}, {0, 0}, 0, "test_bullet.png");
+
+    synced_entity_factory.setup((int)EntityType::PLAYER_PROJECTILE,
+    [](EntitySyncPacket* packet) {
+        auto cast_packet = reinterpret_cast<EntityTextureSyncPacket*>(packet);
+        return new PlayerProjectile({0, 0}, {0, 0}, 0, cast_packet->texture);
     });
 
     unpackers[(int)PacketType::ENTITY_SYNC] = [](Packet* packet) {
         auto sync_packet = reinterpret_cast<EntitySyncPacket*>(packet);
-        Entity* entity = synced_entity_factory.get((int)sync_packet->entity_type)();
+        Entity* entity = synced_entity_factory.get(
+            (int)sync_packet->entity_type
+        )(sync_packet);
 
         if (!sync_packet->owned && Networking::is_host) {
             entity->owned = true;
@@ -225,11 +241,5 @@ void SceneManager::init() {
     unpackers[(int)PacketType::ENTITY_NUKE] = [](Packet* packet) {
         auto nuke_packet = reinterpret_cast<EntityNukePacket*>(packet);
         SceneManager::scene_on->get_entity_by_id(nuke_packet->id)->queue_free();
-    };
-    unpackers[(int)PacketType::ENTITY_START_UPDATE] = [](Packet* packet) {
-        auto update_packet = reinterpret_cast<EntityStartUpdatePacket*>(packet);
-        SceneManager::scene_on->get_entity_by_id(update_packet->id)->start_update_recieve(
-            update_packet
-        );
     };
 }

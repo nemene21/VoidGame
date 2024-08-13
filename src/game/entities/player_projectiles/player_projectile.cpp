@@ -22,3 +22,12 @@ void PlayerProjectile::process(float delta) {
 void PlayerProjectile::private_process(float delta) {
     trans_comp->angle = atan2(trans_comp->velocity.y, trans_comp->velocity.x) * RAD2DEG;
 }
+
+std::pair<EntitySyncPacket*, size_t> PlayerProjectile::get_init_packet() {
+    return get_texture_init_packet("test_bullet.png");
+}
+
+void PlayerProjectile::receive_init_packet(EntitySyncPacket* packet) {
+    auto cast_packet = reinterpret_cast<EntityTextureSyncPacket*>(packet);
+    sprite = Sprite(cast_packet->texture);
+}

@@ -13,8 +13,8 @@ public:
     void process(float delta);
     void private_process(float delta);
 
-    void start_update();
-    void start_update_recieve(EntityStartUpdatePacket* packet);
+    std::pair<EntitySyncPacket*, size_t> get_init_packet();
+    void receive_init_packet(EntitySyncPacket* packet);
 };
 
 #endif

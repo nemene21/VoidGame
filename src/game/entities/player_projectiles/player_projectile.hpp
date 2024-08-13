@@ -12,8 +12,12 @@ public:
     TransformComponent* trans_comp;
     AreaComponent* area_comp;
     PlayerProjectile(Vector2 pos, Vector2 vel, float width, std::string texture);
+
     void process(float delta);
     void private_process(float delta);
+
+    std::pair<EntitySyncPacket*, size_t> get_init_packet();
+    void receive_init_packet(EntitySyncPacket* packet);
 };
 
 #endif

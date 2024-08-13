@@ -34,11 +34,12 @@ void Gun::process(float delta) {
     sprite.z_coord = (int)(trans_comp->angle > 0);
 }
 
-void Gun::start_update() {
-    texture_update(texture_name);
+std::pair<EntitySyncPacket*, size_t> Gun::get_init_packet() {
+    return get_texture_init_packet(texture_name);
 }
-void Gun::start_update_recieve(EntityStartUpdatePacket* packet) {
-    auto cast_packet = reinterpret_cast<EntityTextureUpdatePacket*>(packet);
+
+void Gun::receive_init_packet(EntitySyncPacket* packet) {
+    auto cast_packet = reinterpret_cast<EntityTextureSyncPacket*>(packet);
     sprite = Sprite(cast_packet->texture);
 }
 

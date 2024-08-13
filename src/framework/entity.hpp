@@ -36,9 +36,10 @@ public:
 
     /// @brief Returns true if the entity is synced over the network
     bool is_synced();
-    virtual void start_update();
-    virtual void start_update_recieve(EntityStartUpdatePacket* packet);
-    virtual void texture_update(std::string texture_name);
+    virtual std::pair<EntitySyncPacket*, size_t> get_init_packet();
+    virtual void receive_init_packet(EntitySyncPacket* packet);
+    virtual std::pair<EntityTextureSyncPacket*, size_t>
+        get_texture_init_packet(std::string texture_name);
 
     virtual void process_components(float delta);
     virtual void draw_components(float delta);
