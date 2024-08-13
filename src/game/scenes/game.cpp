@@ -61,6 +61,7 @@ void GameScene::process(float delta) {
     }
 }
 
+// Walker based level generator
 std::set<Vector2> GameScene::generate_floor_tiles(GenData& data) {
     std::set<Vector2> tiles {};
     int steps  = 0,
