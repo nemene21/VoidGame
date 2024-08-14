@@ -84,6 +84,8 @@ void Entity::draw_components(float delta) {
 }
 
 void Entity::queue_free() {
+    if (death_queued || !owned) return;
+
     death_queued = true;
 
     if (!is_synced() || !owned) return;

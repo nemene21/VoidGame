@@ -22,6 +22,9 @@ void Scene::process_entities(float delta) {
     int i = 0;
     while (i != entities.size()) {
         Entity *entity = entities[i];
+        if (entity->is_death_queued())
+            continue;
+
         entity->process(delta);
         if (!entity->is_synced() || entity->owned) {
             entity->private_process(delta);
