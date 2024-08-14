@@ -106,8 +106,6 @@ protected:
 
     Tilemap *collision_mask;
 
-    ParticleDataPtr particle_data;
-
     void spawn_particle();
     void process_particle(Particle& particle);
     void attempt_particle_bounce(Particle& particle, Vector2 dir, float velocity_anim, float delta);
@@ -145,6 +143,8 @@ protected:
     std::shared_ptr<Texture2D> texture;
 
 public:
+    ParticleDataPtr particle_data;
+    
     ParticleSystem(std::string data_filename, Vector2 position={0, 0});
     ~ParticleSystem();
 
@@ -194,10 +194,14 @@ public:
 /// @brief Entity that holds a particle system and unloads itself automatically once there arent any particles left
 class ParticleEntity: public Entity {
 public:
+    std::string system_path;
     ParticleSystem system;
 
     ParticleEntity(std::string path, Vector2 pos, int left=1, Tilemap *mask=nullptr);
     void process(float delta);
+
+    std::pair<EntitySyncPacket*, size_t> get_init_packet();
+    void receive_init_packet(EntitySyncPacket* packet);
 };
 
 #endif

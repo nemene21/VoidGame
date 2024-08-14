@@ -37,7 +37,6 @@ public:
     /// @brief Returns true if the entity is synced over the network
     bool is_synced();
     virtual std::pair<EntitySyncPacket*, size_t> get_init_packet();
-    virtual void receive_init_packet(EntitySyncPacket* packet);
     virtual std::pair<EntityTextureSyncPacket*, size_t>
         get_texture_init_packet(std::string texture_name);
 

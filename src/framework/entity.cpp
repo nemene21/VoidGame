@@ -25,7 +25,6 @@ void Entity::network_update_components() {
 }
 
 std::pair<EntitySyncPacket*, size_t> Entity::get_init_packet() { return {nullptr, 0}; }
-void Entity::receive_init_packet(EntitySyncPacket* packet) {}
 
 std::pair<EntityTextureSyncPacket*, size_t>
     Entity::get_texture_init_packet(std::string texture_name) {

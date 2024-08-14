@@ -9,6 +9,7 @@ enum class EntityType: uint16_t {
     PLAYER,
     GUN,
     PLAYER_PROJECTILE,
+    PARTICLE_SYSTEM,
     COUNT,
 };
 
@@ -52,7 +53,11 @@ struct EntitySyncPacket: public Packet {
     bool owned;
 };
 struct EntityTextureSyncPacket: public EntitySyncPacket {
-    char texture[16];
+    char texture[64];
+};
+struct EntityParticleSyncPacket: public EntitySyncPacket {
+    int8_t z_coord;
+    char system[64];
 };
 struct EntityNukePacket: public Packet {
     uint32_t id;

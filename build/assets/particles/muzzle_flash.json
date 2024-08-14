@@ -1,0 +1,41 @@
+{
+    "amount": 2,
+    "angle": 0.0,
+    "angle_randomness": 360.0,
+    "angular_velocity": 0.0,
+    "angular_velocity_randomness": 0.0,
+    "firerate": 1.0,
+    "firerate_randomness": 0.0,
+    "lifetime": 0.12999999523162842,
+    "lifetime_randomness": 0.05999999865889549,
+    "scale": 1.899999976158142,
+    "scale_ease": "ease_in_out",
+    "scale_end": 0.0,
+    "scale_randomness": 0.4000000059604645,
+    "shape": [
+        2.0,
+        0.0
+    ],
+    "shot_angle": 0.0,
+    "spread": 360.0,
+    "texture": "particle_test.png",
+    "tint": [
+        255,
+        238,
+        195,
+        255
+    ],
+    "tint_ease": "ease_in_out",
+    "tint_end": [
+        134,
+        69,
+        69,
+        255
+    ],
+    "tint_randomness": 0.0,
+    "velocity": 0.0,
+    "velocity_angle": false,
+    "velocity_ease": "ease_out",
+    "velocity_end": 0.0,
+    "velocity_randomness": 8.0
+}

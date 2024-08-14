@@ -19,6 +19,12 @@ Gun::Gun(int player_id, float firerate, float burst_delay, bool automatic, std::
     on_shot.connect([this](Entity* ent) {
         // Shoot animation and screenshake
         anim_comp->play("shoot");
+        auto vfx = new ParticleEntity(
+            "muzzle_flash.json", sprite.position + Vector2Rotate(sprite.offset, trans_comp->angle * DEG2RAD)
+        );
+        vfx->system.z_coord = 1;
+        SceneManager::scene_on->add_synced_entity(vfx, false);
+
         auto camera_comp = ((Player*)SceneManager::scene_on->get_entity_by_id(this->player_id))
             ->camera_comp;
         camera_comp->shake(4, 0.1, this->trans_comp->angle * DEG2RAD + PI);
@@ -36,11 +42,6 @@ void Gun::process(float delta) {
 
 std::pair<EntitySyncPacket*, size_t> Gun::get_init_packet() {
     return get_texture_init_packet(texture_name);
-}
-
-void Gun::receive_init_packet(EntitySyncPacket* packet) {
-    auto cast_packet = reinterpret_cast<EntityTextureSyncPacket*>(packet);
-    sprite = Sprite(cast_packet->texture);
 }
 
 void Gun::private_process(float delta) {

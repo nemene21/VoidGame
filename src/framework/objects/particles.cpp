@@ -433,11 +433,13 @@ void ParticleSystem::draw() {
 
 ParticleEntity::ParticleEntity(std::string path, Vector2 position, int left, Tilemap *mask):
     system {ParticleSystem(path, position)} {
+    type = EntityType::PARTICLE_SYSTEM;
 
     add_component(new TransformComponent(this, position));
     system.set_left(left);
     
     set_name("ParticleEffect");
+    system_path = path;
 
     if (mask != nullptr) {
         system.set_collision_mask(mask);
@@ -450,4 +452,26 @@ void ParticleEntity::process(float delta) {
     if (system.get_num_particles() == 0 && system.get_left() == 0) {
         queue_free();
     }
+}
+
+std::pair<EntitySyncPacket*, size_t> ParticleEntity::get_init_packet() {
+    auto packet = new EntityParticleSyncPacket{
+        PacketType::ENTITY_SYNC,
+        true,
+        EntityType::PARTICLE_SYSTEM,
+        id,
+        owned,
+        system.z_coord,
+        ""
+    };
+    const char *txt = system_path.c_str();
+    strcpy(packet->system, txt);
+
+    return std::make_pair(packet, sizeof(*packet));
+}
+
+void ParticleEntity::receive_init_packet(EntitySyncPacket* packet) {
+    auto cast_packet = reinterpret_cast<EntityParticleSyncPacket*>(packet);
+    system.particle_data = ParticleDataManager::get(cast_packet->system);
+    system.reload_data();
 }

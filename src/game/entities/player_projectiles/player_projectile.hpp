@@ -17,7 +17,6 @@ public:
     void private_process(float delta);
 
     std::pair<EntitySyncPacket*, size_t> get_init_packet();
-    void receive_init_packet(EntitySyncPacket* packet);
 };
 
 #endif

@@ -210,6 +210,14 @@ void SceneManager::init() {
         return new PlayerProjectile({0, 0}, {0, 0}, 0, cast_packet->texture);
     });
 
+    synced_entity_factory.setup((int)EntityType::PARTICLE_SYSTEM,
+    [](EntitySyncPacket* packet) {
+        auto cast_packet = reinterpret_cast<EntityParticleSyncPacket*>(packet);
+        auto vfx = new ParticleEntity(cast_packet->system, {0, 0});
+        vfx->system.z_coord = cast_packet->z_coord;
+        return vfx;
+    });
+
     unpackers[(int)PacketType::ENTITY_SYNC] = [](Packet* packet) {
         auto sync_packet = reinterpret_cast<EntitySyncPacket*>(packet);
         Entity* entity = synced_entity_factory.get(
