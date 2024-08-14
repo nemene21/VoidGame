@@ -187,7 +187,7 @@ Entity* type_entity(EntityType type) {
             break;
         
         case EntityType::GUN:
-            return new Gun(0, 0, 0, false, "test_gun.png", {});
+            return new Gun(0, 0, 0, false, "test_gun.png", {}, 0);
             break;
             
         default:
@@ -204,7 +204,7 @@ void SceneManager::init() {
     synced_entity_factory.setup((int)EntityType::GUN,
     [](EntitySyncPacket* packet) {
         auto cast_packet = reinterpret_cast<EntityTextureSyncPacket*>(packet);
-        return new Gun(0, 0, 0, false, cast_packet->texture, {});
+        return new Gun(0, 0, 0, false, cast_packet->texture, {}, 0);
     });
 
     synced_entity_factory.setup((int)EntityType::PLAYER_PROJECTILE,

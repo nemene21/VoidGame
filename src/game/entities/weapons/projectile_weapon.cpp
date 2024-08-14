@@ -2,23 +2,24 @@
 
 ProjectileFactory projectile_factory = ProjectileFactory((int)PlayerProjectileType::COUNT);
 
-ProjectileWeapon::ProjectileWeapon(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern):
+ProjectileWeapon::ProjectileWeapon(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern, float output_distance):
     Weapon(player_id, firerate, automatic, texture),
     burst_timer {0},
     burst_delay {burst_delay},
     burst_on {pattern.size()},
-    shoot_angle {0}
+    shoot_angle {0},
+    output_distance {output_distance}
     {
     burst = pattern;
 }
 
 void ProjectileWeapon::spawn_projectile(PlayerShot& data, float angle) {
-    angle = data.angle + (RandF2() * data.spread * DEG2RAD) + angle;
+    float vel_angle = data.angle + (RandF2() * data.spread * DEG2RAD) + angle;
 
     // Builds projectile with angle and spread
     PlayerProjectile* projectile = projectile_factory.get((int)data.projectile_key)(
-        sprite.position + Vector2Rotate(sprite.offset, sprite.angle*DEG2RAD),
-        Vector2Rotate({750, 0}, angle)
+        trans_comp->position + Vector2Rotate({output_distance, 0}, trans_comp->angle * DEG2RAD),
+        Vector2Rotate({750, 0}, vel_angle)
     );
     // Instantiates for all players
     SceneManager::scene_on->add_synced_entity(projectile, false);

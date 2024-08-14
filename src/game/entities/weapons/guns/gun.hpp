@@ -9,7 +9,7 @@ public:
     float height;
     float recoil_anim_strength;
 
-    Gun(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern);
+    Gun(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern, float output_distance);
     void process(float delta);
     void private_process(float delta);
 

@@ -27,12 +27,13 @@ public:
     float burst_timer;
     float burst_delay;
     int burst_on;
+    float output_distance;
 
     Signal on_shot;
 
     float shoot_angle;
 
-    ProjectileWeapon(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern);
+    ProjectileWeapon(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern, float output_distance);
     void shoot();
     void spawn_projectiles();
     void spawn_projectile(PlayerShot& data, float angle);

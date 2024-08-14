@@ -1,7 +1,7 @@
 #include "gun.hpp"
 
-Gun::Gun(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern):
-    ProjectileWeapon(player_id, firerate, burst_delay, automatic, texture, pattern),
+Gun::Gun(int player_id, float firerate, float burst_delay, bool automatic, std::string texture, ShotPattern pattern, float output_distance):
+    ProjectileWeapon(player_id, firerate, burst_delay, automatic, texture, pattern, output_distance),
     player_dist {10},
     height {8},
     recoil_anim_strength {6}
@@ -21,7 +21,8 @@ Gun::Gun(int player_id, float firerate, float burst_delay, bool automatic, std::
         // Shoot animation and screenshake
         anim_comp->play("shoot");
         auto vfx = new ParticleEntity(
-            "muzzle_flash.json", sprite.position + Vector2Rotate(sprite.offset, trans_comp->angle * DEG2RAD)
+            "muzzle_flash.json",
+            trans_comp->position + Vector2Rotate({this->output_distance, 0}, trans_comp->angle * DEG2RAD)
         );
         vfx->system.z_coord = 1;
         SceneManager::scene_on->add_synced_entity(vfx, false);

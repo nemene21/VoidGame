@@ -108,7 +108,7 @@ void Player::init_weapons() {
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}}
-        });
+        }, 16);
         return gun;
     });
 }
