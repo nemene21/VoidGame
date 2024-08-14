@@ -4,6 +4,7 @@ PlayerProjectile::PlayerProjectile(Vector2 pos, Vector2 vel, float width, std::s
     sprite {Sprite(texture)}
     {
     type = EntityType::PLAYER_PROJECTILE;
+    set_name("Player Projectile");
 
     trans_comp = new TransformComponent(this, pos);
     trans_comp->velocity = vel;
@@ -23,6 +24,7 @@ void PlayerProjectile::process(float delta) {
 }
 
 void PlayerProjectile::private_process(float delta) {
+
 }
 
 std::pair<EntitySyncPacket*, size_t> PlayerProjectile::get_init_packet() {

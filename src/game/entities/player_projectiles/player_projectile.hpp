@@ -8,6 +8,8 @@
 
 class PlayerProjectile: public Entity {
 public:
+    float lifetime;
+
     Sprite sprite;
     TransformComponent* trans_comp;
     AreaComponent* area_comp;
