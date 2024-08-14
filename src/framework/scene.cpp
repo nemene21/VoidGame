@@ -180,22 +180,6 @@ void SceneManager::unload_all() {
     for (auto to: to_unload) unload(to);
 }
 
-Entity* type_entity(EntityType type) {
-    switch (type) {
-        case EntityType::PLAYER:
-            return new Player();
-            break;
-        
-        case EntityType::GUN:
-            return new Gun(0, 0, 0, false, "test_gun.png", {}, 0);
-            break;
-            
-        default:
-            std::cerr << "Entity type to sync not defined :(" << std::endl;
-            break;
-    }
-}
-
 void SceneManager::init() {
     synced_entity_factory.setup((int)EntityType::PLAYER,
     [](EntitySyncPacket* packet)
