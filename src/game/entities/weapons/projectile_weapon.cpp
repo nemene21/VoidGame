@@ -18,7 +18,7 @@ void ProjectileWeapon::spawn_projectile(PlayerShot& data, float angle) {
     // Builds projectile with angle and spread
     PlayerProjectile* projectile = projectile_factory.get((int)data.projectile_key)(
         sprite.position + Vector2Rotate(sprite.offset, sprite.angle*DEG2RAD),
-        Vector2Rotate({400, 0}, angle)
+        Vector2Rotate({750, 0}, angle)
     );
     // Instantiates for all players
     SceneManager::scene_on->add_synced_entity(projectile, false);
