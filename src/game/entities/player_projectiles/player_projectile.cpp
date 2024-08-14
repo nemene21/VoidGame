@@ -1,6 +1,7 @@
 #include "player_projectile.hpp"
 
 PlayerProjectile::PlayerProjectile(Vector2 pos, Vector2 vel, float width, std::string texture):
+    lifetime {10},
     sprite {Sprite(texture)}
     {
     type = EntityType::PLAYER_PROJECTILE;
@@ -24,7 +25,10 @@ void PlayerProjectile::process(float delta) {
 }
 
 void PlayerProjectile::private_process(float delta) {
-
+    lifetime -= delta;
+    if (lifetime < 0) {
+        queue_free();
+    }
 }
 
 std::pair<EntitySyncPacket*, size_t> PlayerProjectile::get_init_packet() {
