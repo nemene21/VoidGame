@@ -56,7 +56,7 @@ void CameraComponent::process(float delta) {
     // Calculating shake value
     shake_timer = std::max(shake_timer - delta, 0.f);
 
-    float shake_noise = abs(shake_noise_obj.GetNoise((float)GetTime() * 1000.f, 1.f));
+    float shake_noise = RandF();
     shake_noise *= shake_strength;
     shake_noise *= pow(sin(PI * (shake_timer / shake_duration)), 2.0);
 
