@@ -212,13 +212,13 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
         corners.insert({pos.first +.5f, pos.second -.5f, tile.second.type});
         corners.insert({pos.first -.5f, pos.second +.5f, tile.second.type});
 
+        // TODO: Remove this and implement greedy meshing
         if (collider_mode == ColliderBuildMode::INNER) {
             // Tile's collider, position and texture position data
             auto collider = new ColliderComponent(this, Vector2{pos.first, pos.second} * tilesize, tilesize.x, tilesize.y);
             collider->add_layer((int)ColliderIndex::TILEMAP);
             collider->process(0);
             colliders.push_back(collider);
-            std::cout << "the sigma?" << std::endl;
 
         } else if (collider_mode == ColliderBuildMode::OUTER) {
             if (get_tile(pos.first - 1, pos.second) == -1) {
@@ -338,7 +338,7 @@ Vector2 Tilemap::cast_ray(Vector2 from, Vector2 to){
   
     
     if (ax>0){
-    while (Tilemap::get_tile(Tilemap::to_tilepos(test)) == -1 and test.x <= to.x){
+    while (Tilemap::get_tile(Tilemap::to_tilepos(test)) == -1 && test.x <= to.x){
 
         final.x++;
 
@@ -352,7 +352,7 @@ Vector2 Tilemap::cast_ray(Vector2 from, Vector2 to){
     }}
 
     if (ax<0){
-    while (Tilemap::get_tile(Tilemap::to_tilepos(test)) == -1 and test.x >= to.x){
+    while (Tilemap::get_tile(Tilemap::to_tilepos(test)) == -1 && test.x >= to.x){
 
         final.x--;
 
@@ -365,11 +365,11 @@ Vector2 Tilemap::cast_ray(Vector2 from, Vector2 to){
         if(ay < 0) test.y -= a;
     }}
 
-    if(final.x > to.x and ax > 0) final.x = to.x;
-    if(final.x < to.x and ax < 0) final.x = to.x;
+    if(final.x > to.x && ax > 0) final.x = to.x;
+    if(final.x < to.x && ax < 0) final.x = to.x;
 
-    if(final.y > to.y and ay > 0) final.y = to.y;
-    if(final.y < to.y and ay < 0) final.y = to.y;
+    if(final.y > to.y && ay > 0) final.y = to.y;
+    if(final.y < to.y && ay < 0) final.y = to.y;
 
     return final;
 }
