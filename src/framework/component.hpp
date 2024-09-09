@@ -28,6 +28,7 @@ enum ComponentType {
     COLLIDER,
     AREA,
     TIMER,
+    STATE_MACHINE,
     /// @brief Number of components in framework
     COUNT,
 };
