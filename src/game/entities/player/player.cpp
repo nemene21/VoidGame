@@ -4,13 +4,16 @@
 auto weapon_factory = Factory<Weapon, std::function<Weapon*(int)>>((int)WeaponID::COUNT);
 
 Player::Player(): Actor("test_guy.png", {0, 0}, 100),
-    run_particles {ParticleSystem("player_run.json")} {
+    run_particles {ParticleSystem("player_run.json")},
+    nametag {half_res, "Lorem ipsum", 16, {.5f, .5f}} {
     type = EntityType::PLAYER;
     
     // Drawing data
     sprite.offset.y = -11;
     run_particles.z_coord = -1;
     look_dir = 1;
+
+    nametag.angle = 90;
 
     // Player animation
     anim_comp = new AnimationComponent(this);

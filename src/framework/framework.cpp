@@ -56,6 +56,8 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale, bo
 
     InitAudioDevice();
 
+    FONT = LoadFont("assets/font.ttf");
+
     // Default camera
     Camera2D* blank_camera = new Camera2D();
     blank_camera->target = {0, 0};

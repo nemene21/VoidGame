@@ -43,6 +43,7 @@
 #include <objects/trails.hpp>
 #include <objects/particles.hpp>
 #include <objects/audio.hpp>
+#include <label.hpp>
 
 /// @brief Used to initialise the framework and run it in main.cpp
 class Framework {

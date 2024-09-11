@@ -11,6 +11,7 @@
 #include <health_component.hpp>
 #include <animation_component.hpp>
 #include <camera_component.hpp>
+#include <label.hpp>
 
 class Actor: public Entity {
 public:
