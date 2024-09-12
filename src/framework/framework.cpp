@@ -56,7 +56,8 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale, bo
 
     InitAudioDevice();
 
-    FONT = LoadFont("assets/font.ttf");
+    FONT = LoadFontEx("assets/nokia.ttf", 10, NULL, 0);
+    SetTextureFilter(FONT.texture, TEXTURE_FILTER_POINT);
 
     // Default camera
     Camera2D* blank_camera = new Camera2D();

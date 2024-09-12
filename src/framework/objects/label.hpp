@@ -8,7 +8,7 @@ class Label: public UIDrawable {
 public:
     std::string text;
     int fontsize;
-    Label(Vector2 pos, std::string text="", int fontsize=20, Vector2 centering={0, 0});
+    Label(Vector2 pos, std::string text="", int fontsize=11, Vector2 centering={0, 0});
     
     float get_width();
     float get_height();

@@ -5,15 +5,13 @@ auto weapon_factory = Factory<Weapon, std::function<Weapon*(int)>>((int)WeaponID
 
 Player::Player(): Actor("test_guy.png", {0, 0}, 100),
     run_particles {ParticleSystem("player_run.json")},
-    nametag {half_res, "Lorem ipsum", 16, {.5f, .5f}} {
+    nametag {Label(half_res, "Lorem ipsum", 10, {.5f, .5f})} {
     type = EntityType::PLAYER;
     
     // Drawing data
     sprite.offset.y = -11;
     run_particles.z_coord = -1;
     look_dir = 1;
-
-    nametag.angle = 90;
 
     // Player animation
     anim_comp = new AnimationComponent(this);
@@ -39,7 +37,7 @@ Player::Player(): Actor("test_guy.png", {0, 0}, 100),
             1 + cosf(GetTime() * 12) * 0.15
         };
         desired_scale.x *= look_dir;
-
+ 
         trans_comp->scale = Lerpi(trans_comp->scale, desired_scale, 20);
     });
     add_component(anim_comp);
