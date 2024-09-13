@@ -15,8 +15,10 @@ InputField::InputField(
 void InputField::process(float delta) {
     if (text != "") {
         label.text = text;
+        label.tint = WHITE;
     } else {
         label.text = default_text;
+        label.tint = Color{155, 155, 155, 255};
     }
 
     int chr;

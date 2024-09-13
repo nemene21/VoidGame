@@ -15,7 +15,6 @@ Label::Label(
     fontsize {fontsize}
 {
     position = pos;
-    blend_mode = BLEND_ALPHA_PREMULTIPLY;
 }
 
 float Label::get_width() {
