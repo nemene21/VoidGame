@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include <entities/UI/input_field/input_field.hpp>
 
 GameScene::GameScene(): Scene("game_scene") {
     unpackers[(int)PacketType::GENERATION] = [this](Packet* packet) {
@@ -15,6 +16,8 @@ void GameScene::restart() {
     floor_tilemap->collider_mode = ColliderBuildMode::OUTER;
     floor_tilemap->renderer.z_coord = -5;
     add_entity(floor_tilemap);
+
+    add_entity(new InputField({16, 16}, 20, "Default"));
 }
 
 void GameScene::process(float delta) {
@@ -23,13 +26,6 @@ void GameScene::process(float delta) {
 
         if (IsKeyPressed(KEY_G) && Networking::is_host) {
             generate_level(rand64());
-        }
-
-        if (IsKeyDown(KEY_L)) {
-            for (auto entity: query_in_group("Player")) {
-                entity->queue_free();
-            }
-            Networking::disconnect();
         }
 
         if (IsKeyPressed(KEY_SPACE)) {
