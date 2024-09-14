@@ -50,7 +50,7 @@ void Label::draw() {
         position,
         get_dimensions() * centering,
         angle,
-        scaled_fontsize, scaled_fontsize / 8.f,
+        scaled_fontsize, scaled_fontsize / 5.f,
         tint
     );
 }
