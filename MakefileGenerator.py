@@ -33,7 +33,7 @@ def toggle_web_mode():
         COMPILER = "g++"
         INDEX    = ""
         LDFLAGS  = "-L../lib/"
-        LDLIBS   = "-lraylib -lopengl32 -lgdi32 -lwinmm -ldiscord-rpc -lenet64 -lws2_32 -lwinmm"
+        LDLIBS   = "-lraylib -lopengl32 -lgdi32 -lwinmm -ldiscord-rpc -lenet64 -lws2_32 -lwinmm -static"
         OBJ_DIR  = "object_files"
     
     web_button.config(text=f"Web: {WEB}")
