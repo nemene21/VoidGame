@@ -46,4 +46,5 @@ void InputField::process(float delta) {
     edit_cursor.position.x += write_width + 4;
     edit_cursor.scale = Vector2{1, 1} * label.fontsize/10.f * trans_comp->scale.x;
     edit_cursor.position.y += label.fontsize * 0.5f * trans_comp->scale.x;
+    edit_cursor.visible = sin(GetTime() * PI * 2.f) > 0;
 }
