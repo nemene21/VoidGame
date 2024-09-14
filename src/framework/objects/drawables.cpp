@@ -247,6 +247,19 @@ Vector2 Drawable::real_pos() {
     return Vector2Add(position, rotated_offset);
 }
 
+void Drawable::update_transform_cam(TransformComponent* trans_comp) {
+    update_transform(trans_comp);
+    position -= CameraManager::get_camera()->target -
+                CameraManager::get_camera()->offset;
+}
+
+void Drawable::make_ui() {
+    DrawableManager::remove(this);
+    is_ui = true;
+    DrawableManager::add(this);
+}
+
+
 // <Drawable Manager>
 std::set<Drawable *> DrawableManager::drawables {};
 std::set<Drawable *> DrawableManager::ui_drawables {};
@@ -265,7 +278,7 @@ void DrawableManager::render(std::set<Drawable *>& rendering) {
 
         if (!drawable->visible)
             continue;
-            
+
         drawable->shader_bond.use();
         
         BeginBlendMode(drawable->blend_mode);

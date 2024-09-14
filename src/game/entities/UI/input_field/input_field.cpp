@@ -14,12 +14,12 @@ InputField::InputField(
     default_text {default_text} {
 
         trans_comp = new TransformComponent(this, position);
+        edit_cursor.make_ui();
     }
 
 
 void InputField::process(float delta) {
     // TODO: Focusable class that this inherits from, input only when its focused
-    // TODO: Add a writing line thingy
 
     label.update_transform_cam(trans_comp);
 
@@ -31,6 +31,7 @@ void InputField::process(float delta) {
         label.tint = Color{155, 155, 155, 255};
     }
 
+    // Char input
     int key;
     char chr;
     while ((key = GetCharPressed()) > 0) {
@@ -39,12 +40,25 @@ void InputField::process(float delta) {
         char_on++;
     }
 
+    char_on += (int)IsJustPressed("UI Right") - (int)IsJustPressed("UI Left");
+    if (char_on < 0) char_on = 0;
+    if (char_on > text.size()) char_on = text.size();
+
+    // Char removal w backspace
+    if (IsJustPressed("Delete Char")) {
+        if (char_on == 0) goto end;
+        
+        text.erase(char_on-1, 1);
+        char_on--;
+    }
+    end:
+
     std::string left_text = text.substr(0, char_on);
-    float write_width = MeasureTextEx(FONT, left_text.c_str(), label.fontsize, label.fontsize / 5.f).x;
+    float write_width = MeasureTextEx(FONT, left_text.c_str(), label.fontsize, label.get_spacing()).x;
     
-    edit_cursor.position = trans_comp->position;
-    edit_cursor.position.x += write_width + 4;
-    edit_cursor.scale = Vector2{1, 1} * label.fontsize/10.f * trans_comp->scale.x;
-    edit_cursor.position.y += label.fontsize * 0.5f * trans_comp->scale.x;
+    edit_cursor.update_transform_cam(trans_comp);
+    edit_cursor.offset.x = write_width*0.5f + 1;
+    edit_cursor.offset.y = label.get_height()*0.25f;
+    edit_cursor.scale *= label.fontsize/10.f;
     edit_cursor.visible = sin(GetTime() * PI * 2.f) > 0;
 }

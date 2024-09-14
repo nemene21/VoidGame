@@ -148,9 +148,15 @@ public:
     virtual void draw() = 0;
     virtual void process(float delta);
 
+    /// @brief Makes the drawable draw on the UI layer
+    void make_ui();
+
     /// @brief Updates position, scale and angle based on a transform component
     /// @param trans_comp Pointer to transform component
     virtual void update_transform(TransformComponent *trans_comp);
+    /// @brief Updates position, scale and angle based on a transform component, takes care of camera offset (for stuff on UI layer)
+    /// @param trans_comp Pointer to transform component
+    void update_transform_cam(TransformComponent* trans_comp);
     /// @brief Returns the actual position of a Drawable object
     /// @return Position of Drawable (position + offst * scale)
     virtual Vector2 real_pos();

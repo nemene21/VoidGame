@@ -4,6 +4,7 @@
 #include <entity.hpp>
 #include <sprites.hpp>
 #include <transform_component.hpp>
+#include <input.hpp>
 
 class InputField: public Entity {
 public:

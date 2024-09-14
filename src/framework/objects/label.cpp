@@ -23,13 +23,18 @@ float Label::get_width() {
         FONT,
         text.c_str(),
         scaled_fontsize,
-        scaled_fontsize/8.f
+        get_spacing()
     ).x;
 }
 
 float Label::get_height() {
     float scaled_fontsize = fontsize * scale.y;
-    return scaled_fontsize;
+    return MeasureTextEx(
+        FONT,
+        text.c_str(),
+        scaled_fontsize,
+        get_spacing()
+    ).y;
 }
 
 Vector2 Label::get_dimensions() {
@@ -38,8 +43,13 @@ Vector2 Label::get_dimensions() {
         FONT,
         text.c_str(),
         scaled_fontsize,
-        scaled_fontsize/8.f
+        get_spacing()
     );
+}
+
+float Label::get_spacing() {
+    float scaled_fontsize = fontsize * scale.y;
+    return scaled_fontsize / 20.f;
 }
 
 void Label::draw() {
@@ -50,7 +60,7 @@ void Label::draw() {
         position,
         get_dimensions() * centering,
         angle,
-        scaled_fontsize, scaled_fontsize / 5.f,
+        scaled_fontsize, get_spacing(),
         tint
     );
 }

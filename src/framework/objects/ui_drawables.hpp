@@ -8,7 +8,6 @@ public:
     float width, height;
     UIDrawable(float width, float height, Vector2 centering={0, 0});
 
-    void update_transform_cam(TransformComponent* trans_comp);
 
     /// @brief Returns width of the UIDrawable taking into account scale
     /// @return Width of UIDrawable

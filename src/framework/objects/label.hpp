@@ -10,6 +10,7 @@ public:
     int fontsize;
     Label(Vector2 pos, std::string text="", int fontsize=11, Vector2 centering={0, 0});
     
+    float get_spacing();
     float get_width();
     float get_height();
     Vector2 get_dimensions();
