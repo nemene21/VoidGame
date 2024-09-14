@@ -7,6 +7,12 @@ UIDrawable::UIDrawable(float width, float height, Vector2 centering):
     centering {centering}
     {}
 
+void UIDrawable::update_transform_cam(TransformComponent* trans_comp) {
+    update_transform(trans_comp);
+    position -= CameraManager::get_camera()->target -
+                CameraManager::get_camera()->offset;
+}
+
 float UIDrawable::get_width() {
     return width * scale.x;
 }
