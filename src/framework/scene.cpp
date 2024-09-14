@@ -1,6 +1,8 @@
 #include <scene.hpp>
 #include <entities/weapons/guns/gun.hpp>
 
+float comp_update_timer = 0;
+
 // <Scene>
 Scene::Scene(std::string name): name {name}, entities {}, entities_by_name {}, entities_by_id {} {
     SceneManager::setup_scene(this);
@@ -19,6 +21,8 @@ Entity *Scene::get_entity(std::string name) {
 }
 
 void Scene::process_entities(float delta) {
+
+    // Process entities
     int i = 0;
     while (i != entities.size()) {
         Entity *entity = entities[i];
@@ -31,10 +35,18 @@ void Scene::process_entities(float delta) {
         }
 
         entity->process_components(delta);
-        if (entity->is_synced() && entity->owned) {
-            entity->network_update_components();
-        }
         i++;
+    }
+
+    comp_update_timer -= delta;
+    if (comp_update_timer < 0) {
+        comp_update_timer = 1.f/(float)COMP_UPDATES_PER_SEC;
+
+        for (auto entity: entities) {
+            if (entity->is_synced() && entity->owned) {
+                entity->network_update_components();
+            }
+        }
     }
 
     // Remove dead entities
@@ -222,6 +234,7 @@ void SceneManager::init() {
             entity->owned = false;
         }
 
+        entity->components_updated = false;
         entity->id = sync_packet->id;
         SceneManager::scene_on->add_entity(entity);
     };

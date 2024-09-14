@@ -12,6 +12,7 @@
 #include <entities/player/player.hpp>
 
 extern float comp_update_timer;
+const int COMP_UPDATES_PER_SEC = 30;
 
 /// @brief Holds entities which are drawn and processed, offers group queries for entities and automatically removes entities queued for deletion
 /// @note To use a scene you have to initialise the scene with "new YourSceneClass()" and than set the scene with "SceneManager::set_scene("your_scene_name")"

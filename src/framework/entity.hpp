@@ -22,8 +22,9 @@ protected:
     std::unordered_set<std::string> groups;
     std::string name;
 
-
 public:
+    bool components_updated;
+    
     Entity(std::string name);
     Entity();
     virtual ~Entity();

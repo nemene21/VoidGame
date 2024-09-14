@@ -3,8 +3,8 @@
 // <Serialization for networking>
 
 // <Entity>
-Entity::Entity(std::string name): id {-1}, death_queued {false}, owned {true}, name {name} {}
-Entity::Entity(): id {-1}, death_queued {false}, owned {true}, name {"Entity"} {}
+Entity::Entity(std::string name): components_updated {true}, id {-1}, death_queued {false}, owned {true}, name {name} {}
+Entity::Entity(): components_updated {true}, id {-1}, death_queued {false}, owned {true}, name {"Entity"} {}
 Entity::~Entity() {
     for (auto& comp_pair: comps) {
         delete comp_pair.second;
