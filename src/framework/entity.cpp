@@ -32,7 +32,7 @@ std::pair<EntityTextureSyncPacket*, size_t>
         PacketType::ENTITY_SYNC,
         true,
         type,
-        id,
+        (uint32_t)id,
         owned,
         ""
     };
@@ -77,22 +77,20 @@ void Entity::process_components(float delta) {
 }
 
 void Entity::draw_components(float delta) {
-
     for (auto& comp_pair: comps) {
         comp_pair.second->draw(delta);
     }
 }
 
 void Entity::queue_free() {
-    if (death_queued || !owned) return;
-
+    if (death_queued) return;
     death_queued = true;
 
     if (!is_synced() || !owned) return;
     EntityNukePacket nuke = EntityNukePacket{
         PacketType::ENTITY_NUKE,
         true,
-        id
+        (uint32_t)id
     };
     std::cout << "Sending nuke to id " << id << std::endl;
     Networking::send(&nuke, sizeof(nuke), true);

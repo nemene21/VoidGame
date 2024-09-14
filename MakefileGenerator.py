@@ -30,7 +30,7 @@ def toggle_web_mode():
         LDLIBS   = "-lraylib -lenet64 -lws2_32 -lwinmm"
         OBJ_DIR  = "web_object_files"
     else:
-        COMPILER = "g++"
+        COMPILER = "g++ -g"
         INDEX    = ""
         LDFLAGS  = "-L../lib/"
         LDLIBS   = "-lraylib -lopengl32 -lgdi32 -lwinmm -ldiscord-rpc -lenet64 -lws2_32 -lwinmm -static"

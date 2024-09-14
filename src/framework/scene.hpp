@@ -11,6 +11,8 @@
 
 #include <entities/player/player.hpp>
 
+extern float comp_update_timer;
+
 /// @brief Holds entities which are drawn and processed, offers group queries for entities and automatically removes entities queued for deletion
 /// @note To use a scene you have to initialise the scene with "new YourSceneClass()" and than set the scene with "SceneManager::set_scene("your_scene_name")"
 class Scene {
@@ -53,6 +55,8 @@ public:
     /// @brief Unloads all entities from memory
     virtual void unload_entities();
     virtual void restart() = 0;
+
+    virtual void nuke_entity(Entity* entity);
 
     virtual const std::vector<Entity*>& get_entities();
     virtual const std::unordered_map<int, Entity*>& get_entities_by_id();
