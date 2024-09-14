@@ -90,7 +90,7 @@ void Scene::sync_entity(Entity* entity) {
             PacketType::ENTITY_SYNC,
             true,
             entity->type,
-            entity->id,
+            (uint32_t)entity->id,
             entity->owned
         };
         Networking::send(&packet, sizeof(packet), true);
@@ -162,8 +162,10 @@ void SceneManager::setup_scene(Scene* scene) {
 }
 
 void SceneManager::set_scene(std::string name) {
-    scene_on = scene_map[name];
     scene_map[name]->unload_entities();
+    DrawableManager::clear();
+
+    scene_on = scene_map[name];
     scene_map[name]->restart();
 }
 

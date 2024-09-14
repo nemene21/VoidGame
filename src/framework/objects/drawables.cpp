@@ -299,6 +299,7 @@ void DrawableManager::draw_ui() {
 
 void DrawableManager::clear() {
     drawables.clear();
+    ui_drawables.clear();
 }
 
 void DrawableManager::add(Drawable *drawable) {
