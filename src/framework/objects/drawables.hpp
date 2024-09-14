@@ -138,7 +138,7 @@ public:
     BlendMode blend_mode;
 
     /// @brief If this is true on init the Drawable is going to be rendered on the UI layer
-    bool is_ui;
+    bool is_ui, visible;
 
     /// @brief Drawables with a lower z_coord are drawn behind one another
     float z_coord;

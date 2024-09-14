@@ -224,7 +224,8 @@ Drawable::Drawable(Vector2 position, Vector2 offset, Vector2 scale, float angle,
     z_coord {0},
     shader_bond {ShaderBond(shader_path)},
     blend_mode {BLEND_ALPHA},
-    is_ui {is_ui} {
+    is_ui {is_ui},
+    visible {true} {
 
         DrawableManager::add(this);
     }
@@ -261,6 +262,10 @@ void DrawableManager::render(std::set<Drawable *>& rendering) {
     for (auto drawable: sorted) {
         drawable->process(GetFrameTime());
         drawable->shader_bond.update_uniforms();
+
+        if (!drawable->visible)
+            continue;
+            
         drawable->shader_bond.use();
         
         BeginBlendMode(drawable->blend_mode);
