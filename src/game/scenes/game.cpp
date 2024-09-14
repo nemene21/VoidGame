@@ -17,7 +17,9 @@ void GameScene::restart() {
     floor_tilemap->renderer.z_coord = -5;
     add_entity(floor_tilemap);
 
-    add_entity(new InputField({16, 16}, 20, "Default"));
+    auto player = new Player();
+    CameraManager::bind_camera(player->camera_comp->get_camera());
+    add_synced_entity(player, true);
 }
 
 void GameScene::process(float delta) {
@@ -26,33 +28,6 @@ void GameScene::process(float delta) {
 
         if (IsKeyPressed(KEY_G) && Networking::is_host) {
             generate_level(rand64());
-        }
-
-        if (IsKeyPressed(KEY_SPACE)) {
-            std::string temp_msg = "Timestamp " + std::to_string(GetTime());
-            const char* msg = temp_msg.c_str();
-            auto packet = LogPacket{
-                PacketType::LOG,
-                true,
-                ""
-            };
-            strcpy(packet.message, msg);
-            Networking::send(&packet, sizeof(packet), true);
-        }
-    } else {
-        if (IsKeyPressed(KEY_H)) {
-            Networking::host();
-
-            auto player = new Player();
-            CameraManager::bind_camera(player->camera_comp->get_camera());
-            add_synced_entity(player, true);
-
-        } else if (IsKeyPressed(KEY_J)) {
-            Networking::join(Networking::get_local_ip());
-
-            auto player = new Player();
-            CameraManager::bind_camera(player->camera_comp->get_camera());
-            add_synced_entity(player, true);
         }
     }
 }

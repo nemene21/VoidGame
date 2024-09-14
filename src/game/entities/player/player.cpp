@@ -5,7 +5,7 @@ auto weapon_factory = Factory<Weapon, std::function<Weapon*(int)>>((int)WeaponID
 
 Player::Player(): Actor("test_guy.png", {0, 0}, 100),
     run_particles {ParticleSystem("player_run.json")},
-    nametag {Label(half_res, "Lorem ipsum", 10, {.5f, .5f})} {
+    nametag {Label(half_res, "Miroslav", 10, {.5f, .5f})} {
     type = EntityType::PLAYER;
     
     // Drawing data
@@ -63,6 +63,11 @@ void Player::process(float delta) {
     sprite.update_transform(trans_comp);
     run_particles.set_left((int)(Vector2Length(trans_comp->velocity) > 2));
     run_particles.position = trans_comp->position;
+
+    nametag.update_transform_cam(trans_comp);
+    nametag.position.y -= 24;
+    nametag.scale = {1, 1};
+    nametag.angle = 0;
 }
 
 void Player::private_process(float delta) {
