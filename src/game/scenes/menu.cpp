@@ -12,11 +12,11 @@ void MenuScene::restart() {
 
 void MenuScene::process(float delta) {
     if (IsKeyPressed(KEY_H)) {
-        //Networking::host();
-        //SceneManager::set_scene("game_scene");
+        Networking::host();
+        SceneManager::set_scene("game_scene");
 
     } else if (IsKeyPressed(KEY_J)) {
-        //Networking::join(ip_input->text);
-        //SceneManager::set_scene("game_scene");
+        Networking::join(ip_input->text);
+        SceneManager::set_scene("game_scene");
     }
 }
