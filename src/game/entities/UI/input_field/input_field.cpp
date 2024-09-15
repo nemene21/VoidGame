@@ -15,6 +15,25 @@ InputField::InputField(
 
         edit_cursor.make_ui();
         set_name("Text Input");
+
+        on_focus.connect([this](Entity* ent) {
+            float d = mouse_pos().x - trans_comp->position.x;
+            char_on = 0;
+
+            while (char_on != text.size()-1) {
+                std::string left_text = text.substr(0, char_on+1);
+                float len = MeasureTextEx(FONT, left_text.c_str(), label.fontsize, label.get_spacing()).x;
+                if (d < len - label.get_spacing()*2.f) {
+                    break;
+                } else {
+                    char_on++;
+                }
+            }
+            float len = MeasureTextEx(FONT, text.c_str(), label.fontsize, label.get_spacing()).x;
+            if (d > len - label.get_spacing()*4.f) {
+                char_on = text.size();
+            }
+        });
     }
 
 
