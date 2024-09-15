@@ -6,20 +6,20 @@ InputField::InputField(
     std::string default_text,
     std::string start_text):
 
-    Entity("UI Text Input Field"),
+    Focusable(position),
     label {Label(position, start_text, fontsize)},
     edit_cursor {Sprite("UI/write_cursor.png")},
     char_on {start_text.size()},
     text {start_text},
     default_text {default_text} {
 
-        trans_comp = new TransformComponent(this, position);
         edit_cursor.make_ui();
+        set_name("Text Input");
     }
 
 
 void InputField::process(float delta) {
-    // TODO: Focusable class that this inherits from, input only when its focused
+    focus_on_rect({res.x, label.get_height()}, label.centering);
 
     label.update_transform_cam(trans_comp);
 
@@ -29,6 +29,20 @@ void InputField::process(float delta) {
     } else {
         label.text = default_text;
         label.tint = Color{155, 155, 155, 255};
+    }
+
+    std::string left_text = text.substr(0, char_on);
+    float write_width = MeasureTextEx(FONT, left_text.c_str(), label.fontsize, label.get_spacing()).x;
+    
+    edit_cursor.update_transform_cam(trans_comp);
+    edit_cursor.offset.x = write_width*0.5f + 1;
+    edit_cursor.offset.y = label.get_height()*0.25f;
+    edit_cursor.scale *= label.fontsize/10.f;
+    edit_cursor.visible = sin(GetTime() * PI * 2.f) > 0;
+
+    if (!focused) {
+        edit_cursor.visible = false;
+        return;
     }
 
     // Char input
@@ -52,13 +66,4 @@ void InputField::process(float delta) {
         char_on--;
     }
     end:
-
-    std::string left_text = text.substr(0, char_on);
-    float write_width = MeasureTextEx(FONT, left_text.c_str(), label.fontsize, label.get_spacing()).x;
-    
-    edit_cursor.update_transform_cam(trans_comp);
-    edit_cursor.offset.x = write_width*0.5f + 1;
-    edit_cursor.offset.y = label.get_height()*0.25f;
-    edit_cursor.scale *= label.fontsize/10.f;
-    edit_cursor.visible = sin(GetTime() * PI * 2.f) > 0;
 }

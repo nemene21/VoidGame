@@ -5,6 +5,7 @@ std::map<std::string, std::vector<Input>> inputs = {
     {"Shoot", {{InputType::MOUSE, MOUSE_BUTTON_LEFT}}},
     
     {"Continue", {{InputType::KEY, KEY_SPACE}, {InputType::KEY, KEY_ENTER}, {InputType::KEY, KEY_C}}},
+    {"Click", {{InputType::MOUSE, MOUSE_BUTTON_LEFT}}},
     {"Delete Char", {{InputType::KEY, KEY_BACKSPACE}}},
 
     {"Swap Weapon", {{InputType::KEY, KEY_SPACE}}},

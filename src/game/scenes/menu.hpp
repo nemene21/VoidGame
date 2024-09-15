@@ -7,6 +7,7 @@
 class MenuScene: public Scene {
 public:
     InputField* ip_input;
+    InputField* name_input;
 
     MenuScene();
     void restart();

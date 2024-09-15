@@ -12,7 +12,7 @@
 #include <entities/player/player.hpp>
 
 extern float comp_update_timer;
-const int COMP_UPDATES_PER_SEC = 30;
+const int COMP_UPDATES_PER_SEC = 60;
 
 /// @brief Holds entities which are drawn and processed, offers group queries for entities and automatically removes entities queued for deletion
 /// @note To use a scene you have to initialise the scene with "new YourSceneClass()" and than set the scene with "SceneManager::set_scene("your_scene_name")"
@@ -31,6 +31,7 @@ public:
     virtual void process_entities(float delta);
 
     /// @brief Adds a new entity to the scene
+    
     /// @param entity Pointer to entity, the scene is now responsible for it
     virtual void add_entity(Entity* entity);
     virtual void add_synced_entity(Entity* entity, bool owned);
