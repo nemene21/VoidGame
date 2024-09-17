@@ -4,7 +4,8 @@
 auto weapon_factory = Factory<Weapon, std::function<Weapon*(int)>>((int)WeaponID::COUNT);
 
 Player::Player(): Actor("test_guy.png", {0, 0}, 100),
-    run_particles {ParticleSystem("player_run.json")} {
+    run_particles {ParticleSystem("player_run.json")},
+    nametag {Label(half_res, "Miroslav", 10, {.5f, .5f})} {
     type = EntityType::PLAYER;
     
     // Drawing data
@@ -36,7 +37,7 @@ Player::Player(): Actor("test_guy.png", {0, 0}, 100),
             1 + cosf(GetTime() * 12) * 0.15
         };
         desired_scale.x *= look_dir;
-
+ 
         trans_comp->scale = Lerpi(trans_comp->scale, desired_scale, 20);
     });
     add_component(anim_comp);
@@ -62,6 +63,11 @@ void Player::process(float delta) {
     sprite.update_transform(trans_comp);
     run_particles.set_left((int)(Vector2Length(trans_comp->velocity) > 2));
     run_particles.position = trans_comp->position;
+
+    nametag.update_transform_cam(trans_comp);
+    nametag.position.y -= 24;
+    nametag.scale = {1, 1};
+    nametag.angle = 0;
 }
 
 void Player::private_process(float delta) {
@@ -104,7 +110,7 @@ void Player::init_projectiles() {
 
 void Player::init_weapons() {
     weapon_factory.setup((int)WeaponID::TEST, [](int player_id) -> Weapon* {
-        auto gun = new Gun(player_id, 2.f, 0.05f, true, (std::string)"test_gun.png", ShotPattern{
+        auto gun = new Gun(player_id, 20.f, 0.05f, true, (std::string)"test_gun.png", ShotPattern{
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}}

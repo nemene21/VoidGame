@@ -1,6 +1,8 @@
 #include <scene.hpp>
 #include <entities/weapons/guns/gun.hpp>
 
+float comp_update_timer = 0;
+
 // <Scene>
 Scene::Scene(std::string name): name {name}, entities {}, entities_by_name {}, entities_by_id {} {
     SceneManager::setup_scene(this);
@@ -19,6 +21,8 @@ Entity *Scene::get_entity(std::string name) {
 }
 
 void Scene::process_entities(float delta) {
+
+    // Process entities
     int i = 0;
     while (i != entities.size()) {
         Entity *entity = entities[i];
@@ -31,26 +35,28 @@ void Scene::process_entities(float delta) {
         }
 
         entity->process_components(delta);
-        if (entity->is_synced() && entity->owned) {
-            entity->network_update_components();
-        }
         i++;
+    }
+
+    comp_update_timer -= delta;
+    if (comp_update_timer < 0) {
+        comp_update_timer = 1.f/(float)COMP_UPDATES_PER_SEC;
+
+        for (auto entity: entities) {
+            if (entity->is_synced() && entity->owned) {
+                entity->network_update_components();
+            }
+        }
     }
 
     // Remove dead entities
     for (int i = entities.size()-1; i >= 0; i--) {
-
         if (entities[i]->is_death_queued()) {
-            entities_by_name.erase(entities[i]->get_name());
-            if (entities[i]->id != -1)
-                entities_by_id.erase(entities[i]->id);
-
-            delete entities[i];
-            entities.erase(entities.begin() + i);
+            nuke_entity(entities[i]);
         }
     }
 }
- 
+
 void Scene::draw_entities(float delta) {
     for (Entity *entity: entities) {
         entity->draw(delta);
@@ -90,7 +96,7 @@ void Scene::sync_entity(Entity* entity) {
             PacketType::ENTITY_SYNC,
             true,
             entity->type,
-            entity->id,
+            (uint32_t)entity->id,
             entity->owned
         };
         Networking::send(&packet, sizeof(packet), true);
@@ -100,7 +106,7 @@ void Scene::sync_entity(Entity* entity) {
 
 auto synced_entity_factory = Factory<Entity, std::function<Entity*(EntitySyncPacket*)>>((int)EntityType::COUNT);
 
-void Scene::add_synced_entity(Entity* entity, bool owned) {
+void Scene::add_synced_entity(Entity* entity, bool owned_by_client) {
     int id = get_valid_entity_id();
 
     entity->id = id;
@@ -117,6 +123,20 @@ std::vector<Entity*> Scene::query_in_group(std::string name) {
     return found;
 }
 
+void Scene::nuke_entity(Entity* entity) {
+    if (entities_by_name.find(entity->get_name()) != entities_by_name.end())
+        entities_by_name.erase(entity->get_name());
+
+    if (entity->id != -1)
+        entities_by_id.erase(entity->id);
+
+    auto it = std::find(entities.begin(), entities.end(), entity);
+    if (it != entities.end())
+        entities.erase(it);
+
+    delete entity;
+}
+
 Entity *Scene::first_in_group(std::string name) {
     for (auto entity: entities) {
         if (entity->is_in_group(name)) return entity;
@@ -126,12 +146,7 @@ Entity *Scene::first_in_group(std::string name) {
 
 void Scene::unload_entities() {
     for (int i = entities.size()-1; i >= 0; i--) {
-        entities_by_name.erase(entities[i]->get_name());
-        if (entities[i]->id != -1)
-                entities_by_id.erase(entities[i]->id);
-
-        delete entities[i];
-        entities.erase(entities.begin() + i);
+        nuke_entity(entities[i]);
     }
 }
 
@@ -162,8 +177,10 @@ void SceneManager::setup_scene(Scene* scene) {
 }
 
 void SceneManager::set_scene(std::string name) {
-    scene_on = scene_map[name];
     scene_map[name]->unload_entities();
+    DrawableManager::clear();
+
+    scene_on = scene_map[name];
     scene_map[name]->restart();
 }
 
@@ -217,6 +234,7 @@ void SceneManager::init() {
             entity->owned = false;
         }
 
+        entity->components_updated = false;
         entity->id = sync_packet->id;
         SceneManager::scene_on->add_entity(entity);
     };
@@ -235,6 +253,13 @@ void SceneManager::init() {
     };
     unpackers[(int)PacketType::ENTITY_NUKE] = [](Packet* packet) {
         auto nuke_packet = reinterpret_cast<EntityNukePacket*>(packet);
-        SceneManager::scene_on->get_entity_by_id(nuke_packet->id)->queue_free();
+        std::cout << "nuking entity " << nuke_packet->id << std::endl;
+
+        if (!SceneManager::scene_on->has_entity_id(nuke_packet->id))
+            return;
+
+        SceneManager::scene_on->nuke_entity(
+            SceneManager::scene_on->get_entity_by_id(nuke_packet->id)
+        );
     };
 }

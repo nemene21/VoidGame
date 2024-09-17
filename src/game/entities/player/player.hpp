@@ -6,6 +6,7 @@ class Player: public Actor {
 public:
     ParticleSystem run_particles;
     CameraComponent* camera_comp;
+    Label nametag;
     int look_dir;
 
     Player();

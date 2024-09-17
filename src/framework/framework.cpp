@@ -56,6 +56,9 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale, bo
 
     InitAudioDevice();
 
+    FONT = LoadFontEx("assets/nokia.ttf", 10, NULL, 0);
+    SetTextureFilter(FONT.texture, TEXTURE_FILTER_POINT);
+
     // Default camera
     Camera2D* blank_camera = new Camera2D();
     blank_camera->target = {0, 0};
@@ -122,7 +125,7 @@ void Framework::debug_gui() {
 
             if (ImGui::CollapsingHeader(ent_name.c_str())) {
                 ImGui::Indent(25.f);
-                ImGui::Text(("Owned: " + (entity->owned ? std::string("true") : std::string("false"))).c_str());
+                ImGui::Text(("Owned: " + (entity->owned ? std::string("true") : std::string("false")) + "; id: " + std::to_string(entity->id)).c_str());
 
                 ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.4f, 0.7f, 1.0f, 0.1f));
 

@@ -22,13 +22,14 @@ protected:
     std::unordered_set<std::string> groups;
     std::string name;
 
-    bool death_queued;
-
 public:
+    bool components_updated;
+    
     Entity(std::string name);
     Entity();
     virtual ~Entity();
 
+    bool death_queued;
     bool owned;
     int id;
     EntityType type;

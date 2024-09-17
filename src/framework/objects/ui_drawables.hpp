@@ -8,6 +8,7 @@ public:
     float width, height;
     UIDrawable(float width, float height, Vector2 centering={0, 0});
 
+
     /// @brief Returns width of the UIDrawable taking into account scale
     /// @return Width of UIDrawable
     float get_width();

@@ -224,7 +224,8 @@ Drawable::Drawable(Vector2 position, Vector2 offset, Vector2 scale, float angle,
     z_coord {0},
     shader_bond {ShaderBond(shader_path)},
     blend_mode {BLEND_ALPHA},
-    is_ui {is_ui} {
+    is_ui {is_ui},
+    visible {true} {
 
         DrawableManager::add(this);
     }
@@ -246,6 +247,19 @@ Vector2 Drawable::real_pos() {
     return Vector2Add(position, rotated_offset);
 }
 
+void Drawable::update_transform_cam(TransformComponent* trans_comp) {
+    update_transform(trans_comp);
+    position -= CameraManager::get_camera()->target -
+                CameraManager::get_camera()->offset;
+}
+
+void Drawable::make_ui() {
+    DrawableManager::remove(this);
+    is_ui = true;
+    DrawableManager::add(this);
+}
+
+
 // <Drawable Manager>
 std::set<Drawable *> DrawableManager::drawables {};
 std::set<Drawable *> DrawableManager::ui_drawables {};
@@ -261,6 +275,10 @@ void DrawableManager::render(std::set<Drawable *>& rendering) {
     for (auto drawable: sorted) {
         drawable->process(GetFrameTime());
         drawable->shader_bond.update_uniforms();
+
+        if (!drawable->visible)
+            continue;
+
         drawable->shader_bond.use();
         
         BeginBlendMode(drawable->blend_mode);
@@ -281,6 +299,7 @@ void DrawableManager::draw_ui() {
 
 void DrawableManager::clear() {
     drawables.clear();
+    ui_drawables.clear();
 }
 
 void DrawableManager::add(Drawable *drawable) {

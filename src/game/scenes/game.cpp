@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include <entities/UI/input_field/input_field.hpp>
 
 GameScene::GameScene(): Scene("game_scene") {
     unpackers[(int)PacketType::GENERATION] = [this](Packet* packet) {
@@ -15,6 +16,10 @@ void GameScene::restart() {
     floor_tilemap->collider_mode = ColliderBuildMode::OUTER;
     floor_tilemap->renderer.z_coord = -5;
     add_entity(floor_tilemap);
+
+    auto player = new Player();
+    CameraManager::bind_camera(player->camera_comp->get_camera());
+    add_synced_entity(player, true);
 }
 
 void GameScene::process(float delta) {
@@ -23,40 +28,6 @@ void GameScene::process(float delta) {
 
         if (IsKeyPressed(KEY_G) && Networking::is_host) {
             generate_level(rand64());
-        }
-
-        if (IsKeyDown(KEY_L)) {
-            for (auto entity: query_in_group("Player")) {
-                entity->queue_free();
-            }
-            Networking::disconnect();
-        }
-
-        if (IsKeyPressed(KEY_SPACE)) {
-            std::string temp_msg = "Timestamp " + std::to_string(GetTime());
-            const char* msg = temp_msg.c_str();
-            auto packet = LogPacket{
-                PacketType::LOG,
-                true,
-                ""
-            };
-            strcpy(packet.message, msg);
-            Networking::send(&packet, sizeof(packet), true);
-        }
-    } else {
-        if (IsKeyPressed(KEY_H)) {
-            Networking::host();
-
-            auto player = new Player();
-            CameraManager::bind_camera(player->camera_comp->get_camera());
-            add_synced_entity(player, true);
-
-        } else if (IsKeyPressed(KEY_J)) {
-            Networking::join(Networking::get_local_ip());
-
-            auto player = new Player();
-            CameraManager::bind_camera(player->camera_comp->get_camera());
-            add_synced_entity(player, true);
         }
     }
 }
