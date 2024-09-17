@@ -207,7 +207,7 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
 
             if (check_collider(x, y) == true) {
 
-                auto collider = new ColliderComponent(this, Vector2{x, y} * tilesize, tilesize.x, tilesize.y);
+                auto collider = new ColliderComponent(this, Vector2{(float)x, (float)y} * tilesize, tilesize.x, tilesize.y);
                 collider->add_layer((int)ColliderIndex::TILEMAP);
                 collider->process(0);
                 colliders.push_back(collider);
@@ -463,23 +463,21 @@ Vector2 Tilemap::pathfind(Vector2 from, Vector2 to, int max_iterations) {
 }
 
 bool Tilemap::check_collider(int x, int y) {
-    if (collider_mode == ColliderBuildMode::INNER 
-        && get_tile(x, y) != -1 
-      ) return true;
+    if (collider_mode == ColliderBuildMode::NONE)
+        return false;
 
-    else if (
-        collider_mode == ColliderBuildMode::OUTER
-        && get_tile(x, y) == -1  
-        && (get_tile(x, y+1) != -1 
-            || get_tile(x, y-1) != -1 
-            || get_tile(x-1, y) != -1  
-            || get_tile(x+1, y) != -1 
-           )
-    ) return true;
+    if (collider_mode == ColliderBuildMode::INNER)
+        return get_tile(x, y) != -1;
 
-    
-    else return false;
-
+    if (collider_mode == ColliderBuildMode::OUTER) {
+        bool neighbours = (
+            get_tile(x, y+1) != -1 ||
+            get_tile(x, y-1) != -1 ||
+            get_tile(x-1, y) != -1 ||
+            get_tile(x+1, y) != -1 
+        );
+        return (get_tile(x, y) == -1) && neighbours;
+    }
 }
 
 void Tilemap::process(float delta) {
