@@ -12,6 +12,7 @@
 #include <animation_component.hpp>
 #include <camera_component.hpp>
 #include <label.hpp>
+#include <components/state_component.hpp>
 
 class Actor: public Entity {
 public:

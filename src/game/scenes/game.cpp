@@ -1,6 +1,8 @@
 #include "game.hpp"
 #include <entities/UI/input_field/input_field.hpp>
 
+std::string player_username = "";
+
 GameScene::GameScene(): Scene("game_scene") {
     unpackers[(int)PacketType::GENERATION] = [this](Packet* packet) {
         auto cast_packet = reinterpret_cast<GenerationPacket*>(packet);
@@ -18,6 +20,7 @@ void GameScene::restart() {
     add_entity(floor_tilemap);
 
     auto player = new Player();
+    player->nametag.text = player_username;
     CameraManager::bind_camera(player->camera_comp->get_camera());
     add_synced_entity(player, true);
 }

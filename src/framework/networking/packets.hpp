@@ -59,6 +59,9 @@ struct EntityParticleSyncPacket: public EntitySyncPacket {
     int8_t z_coord;
     char system[64];
 };
+struct EntityPlayerSyncPacket: public EntitySyncPacket {
+    char username[16];
+};
 struct EntityNukePacket: public Packet {
     uint32_t id;
 };

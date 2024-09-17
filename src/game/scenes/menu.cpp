@@ -1,4 +1,5 @@
 #include "menu.hpp"
+#include "game.hpp"
 
 MenuScene::MenuScene():
     Scene("menu_scene") {}
@@ -13,6 +14,7 @@ void MenuScene::restart() {
     host_button = new Button({16, 16+64}, "Host");
     host_button->on_press.connect([this](Entity* ent) {
         Networking::host();
+        player_username = name_input->text;
         SceneManager::set_scene("game_scene");
     });
     add_entity(host_button);
@@ -20,6 +22,7 @@ void MenuScene::restart() {
     join_button = new Button({16, 16 + 96}, "Join");
     join_button->on_press.connect([this](Entity* ent) {
         Networking::join(ip_input->text);
+        player_username = name_input->text;
         SceneManager::set_scene("game_scene");
     });
     add_entity(join_button);

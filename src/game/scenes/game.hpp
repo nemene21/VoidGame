@@ -5,6 +5,8 @@
 #include <entities/player/player.hpp>
 #include <tilemap_entity.hpp>
 
+extern std::string player_username;
+
 struct GenData {
     int min_tiles, max_tiles;
     float change_chance;
