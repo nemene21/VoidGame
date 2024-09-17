@@ -117,6 +117,10 @@ public:
     /// @param from The starting point
     /// @param to The end point
     Vector2 pathfind(Vector2 from, Vector2 to, int max_iterations=1024);
+    /// @brief Returns a boolean whether or not there should be a collider on the tile
+    /// @param x X coord of tile
+    /// @param y Y coord of tile
+    bool check_collider(int x, int y);
 
     /// @brief Saves tile data to disk
     /// @param path Path to save on

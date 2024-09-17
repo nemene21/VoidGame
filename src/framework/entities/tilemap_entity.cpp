@@ -202,6 +202,19 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
     auto& colliders = collider_chunks[chunk_pos];
     colliders.clear();
 
+    for (int x = chunk_pos.first * chunksize.x; x < chunk_pos.first * chunksize.x + chunksize.x; x++ ) {
+        for (int y = chunk_pos.second * chunksize.y; y < chunk_pos.second * chunksize.y + chunksize.y; y++ ) {
+
+            if (check_collider(x, y) == true) {
+
+                auto collider = new ColliderComponent(this, Vector2{x, y} * tilesize, tilesize.x, tilesize.y);
+                collider->add_layer((int)ColliderIndex::TILEMAP);
+                collider->process(0);
+                colliders.push_back(collider);
+            }
+        }
+    }
+
     // Generate the corner positions from the tiles
     std::set<std::tuple<float, float, int>> corners;
     for (auto& tile: tiledata[chunk_pos]) {
@@ -212,40 +225,7 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
         corners.insert({pos.first +.5f, pos.second -.5f, tile.second.type});
         corners.insert({pos.first -.5f, pos.second +.5f, tile.second.type});
 
-        // TODO: Remove this and implement greedy meshing
-        if (collider_mode == ColliderBuildMode::INNER) {
-            // Tile's collider, position and texture position data
-            auto collider = new ColliderComponent(this, Vector2{pos.first, pos.second} * tilesize, tilesize.x, tilesize.y);
-            collider->add_layer((int)ColliderIndex::TILEMAP);
-            collider->process(0);
-            colliders.push_back(collider);
-
-        } else if (collider_mode == ColliderBuildMode::OUTER) {
-            if (get_tile(pos.first - 1, pos.second) == -1) {
-                auto collider = new ColliderComponent(this, Vector2{pos.first - 1, pos.second} * tilesize, tilesize.x, tilesize.y);
-                collider->add_layer((int)ColliderIndex::TILEMAP);
-                collider->process(0);
-                colliders.push_back(collider);
-            }
-            if (get_tile(pos.first + 1, pos.second) == -1) {
-                auto collider = new ColliderComponent(this, Vector2{pos.first + 1, pos.second} * tilesize, tilesize.x, tilesize.y);
-                collider->add_layer((int)ColliderIndex::TILEMAP);
-                collider->process(0);
-                colliders.push_back(collider);
-            }
-            if (get_tile(pos.first, pos.second - 1) == -1) {
-                auto collider = new ColliderComponent(this, Vector2{pos.first, pos.second - 1} * tilesize, tilesize.x, tilesize.y);
-                collider->add_layer((int)ColliderIndex::TILEMAP);
-                collider->process(0);
-                colliders.push_back(collider);
-            }
-            if (get_tile(pos.first, pos.second + 1) == -1) {
-                auto collider = new ColliderComponent(this, Vector2{pos.first, pos.second + 1} * tilesize, tilesize.x, tilesize.y);
-                collider->add_layer((int)ColliderIndex::TILEMAP);
-                collider->process(0);
-                colliders.push_back(collider);
-            }
-        }
+        
     }
 
     for (std::tuple<float, float, int> corner_data: corners) {
@@ -480,6 +460,26 @@ Vector2 Tilemap::pathfind(Vector2 from, Vector2 to, int max_iterations) {
             }
         }
     }
+}
+
+bool Tilemap::check_collider(int x, int y) {
+    if (collider_mode == ColliderBuildMode::INNER 
+        && get_tile(x, y) != -1 
+      ) return true;
+
+    else if (
+        collider_mode == ColliderBuildMode::OUTER
+        && get_tile(x, y) == -1  
+        && (get_tile(x, y+1) != -1 
+            || get_tile(x, y-1) != -1 
+            || get_tile(x-1, y) != -1  
+            || get_tile(x+1, y) != -1 
+           )
+    ) return true;
+
+    
+    else return false;
+
 }
 
 void Tilemap::process(float delta) {
