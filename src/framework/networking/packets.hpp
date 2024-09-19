@@ -10,6 +10,7 @@ enum class EntityType: uint16_t {
     GUN,
     PLAYER_PROJECTILE,
     PARTICLE_SYSTEM,
+    CHASER_ENEMY,
     COUNT,
 };
 

@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include <entities/UI/input_field/input_field.hpp>
+#include <entities/enemies/chaser/chaser.hpp>
 
 std::string player_username = "";
 
@@ -23,6 +24,9 @@ void GameScene::restart() {
     player->nametag.text = player_username;
     CameraManager::bind_camera(player->camera_comp->get_camera());
     add_synced_entity(player, true);
+
+    auto enemy = new ChaserEnemy({300, 300});
+    add_synced_entity(enemy, true);
 }
 
 void GameScene::process(float delta) {

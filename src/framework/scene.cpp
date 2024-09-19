@@ -1,5 +1,6 @@
 #include <scene.hpp>
 #include <entities/weapons/guns/gun.hpp>
+#include <entities/enemies/chaser/chaser.hpp>
 
 float comp_update_timer = 0;
 
@@ -220,6 +221,11 @@ void SceneManager::init() {
         auto vfx = new ParticleEntity(cast_packet->system, {0, 0});
         vfx->system.z_coord = cast_packet->z_coord;
         return vfx;
+    });
+
+    synced_entity_factory.setup((int)EntityType::CHASER_ENEMY,
+    [](EntitySyncPacket* packet) {
+        return new ChaserEnemy({0, 0});
     });
 
     unpackers[(int)PacketType::ENTITY_SYNC] = [](Packet* packet) {

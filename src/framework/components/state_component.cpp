@@ -1,14 +1,16 @@
 #include <state_component.hpp>
+#include <entity.hpp>
 
 StateComponent::StateComponent(Entity* entity, StateMap states, std::string state):
     Component(CompType::STATE_MACHINE, entity),
     states {states},
-    state {state} {}
+    state {state},
+    paused {false} {}
 
 void StateComponent::process(float delta) {
-    if (paused)
+    if (paused || !entity->owned)
         return;
-
+    
     states[state](delta);
 }
 
