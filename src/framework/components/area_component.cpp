@@ -169,25 +169,24 @@ void AreaComponent::check_overlaps() {
         auto areas = AreaManager::get_nearby_areas(this, layer);
 
         for (auto area: areas) {
-            if (area != this) {
-                if (overlaps(this, area)) {
-                    
-                    // Add area if its not in
-                    if (areas_overlapping.find(area) == areas_overlapping.end()) {
-                        areas_overlapping.insert(area);
+            if (area == this)
+                continue;
 
-                        last_entered = area;
-                        area_entered.emit(entity);
-                    }
-                } else {
-                    
-                    // Remove area if it is in
-                    if (areas_overlapping.find(area) != areas_overlapping.end()) {
-                        areas_overlapping.erase(area);
+            if (overlaps(this, area)) {
+                // Add area if its not in
+                if (areas_overlapping.find(area) == areas_overlapping.end()) {
+                    areas_overlapping.insert(area);
 
-                        last_exited = area;
-                        area_exited.emit(entity);
-                    }
+                    last_entered = area;
+                    area_entered.emit(entity);
+                }
+            } else {
+                // Remove area if it is in
+                if (areas_overlapping.find(area) != areas_overlapping.end()) {
+                    areas_overlapping.erase(area);
+
+                    last_exited = area;
+                    area_exited.emit(entity);
                 }
             }
         }
