@@ -3,7 +3,9 @@
 Button::Button(Vector2 pos, std::string text):
     Focusable(pos),
     label {Label(pos, text, 20)},
-    sprite {Sprite("basic_particle.png")} {}
+    sprite {Sprite("basic_particle.png")} {
+        set_name("Button '" + text +"'");
+    }
 
 void Button::process(float delta) {
     focus_on_rect(label.get_dimensions(), label.centering);
