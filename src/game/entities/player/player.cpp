@@ -110,7 +110,7 @@ void Player::init_projectiles() {
 
 void Player::init_weapons() {
     weapon_factory.setup((int)WeaponID::TEST, [](int player_id) -> Weapon* {
-        auto gun = new Gun(player_id, 20.f, 0.05f, true, (std::string)"test_gun.png", ShotPattern{
+        auto gun = new Gun(player_id, 2.f, 0.05f, true, (std::string)"test_gun.png", ShotPattern{
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}}
