@@ -4,7 +4,7 @@ const float CHASER_SPEED = 100;
 ChaserEnemy::ChaserEnemy(Vector2 position):
     Enemy(new StateComponent(this, {
         {"chase", [this](float delta) { chase(delta); }}
-    }, "chase"), 100, "test_enemy.png", position, 8)
+    }, "chase"), 1000, "test_enemy.png", position, 8)
     {
         type = EntityType::CHASER_ENEMY;
     }

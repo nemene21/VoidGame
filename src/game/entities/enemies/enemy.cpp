@@ -17,20 +17,26 @@ Enemy::Enemy(StateComponent* state_machine, float health, std::string texture, V
 
         area_comp->area_entered.connect([this](Entity* ent) {
             auto hit_by = area_comp->last_entered->entity;
+            auto hit_trans = (TransformComponent*)hit_by->get_component(CompType::TRANSFORM);
+
+            
+
             health_comp->hurt(30);
             anim_comp->play("hit");
         });
         add_component(area_comp);
 
         anim_comp = new AnimationComponent(this);
-        anim_comp->make_animation("hit", 0.1, false);
+        anim_comp->make_animation("hit", 0.2, false);
         anim_comp->add_event("hit", 0, [this](float anim) {
+            std::cout << "event 1" << std::endl;
             float flash = 1;
             sprite.shader_bond.send_uniform("flash", &flash, sizeof(float), SHADER_UNIFORM_FLOAT);
         });
-        anim_comp->add_event("hit", 1, [this](float anim) {
-            std::cout << "THE SIGMA?!?!?" << std::endl;
+        anim_comp->add_event("hit", 0.1, [this](float anim) {
+            std::cout << "event 2" << std::endl;
             float flash = 0;
             sprite.shader_bond.send_uniform("flash", &flash, sizeof(float), SHADER_UNIFORM_FLOAT);
         });
+        add_component(anim_comp);
     }
