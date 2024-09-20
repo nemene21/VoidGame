@@ -19,8 +19,6 @@ Enemy::Enemy(StateComponent* state_machine, float health, std::string texture, V
             auto hit_by = area_comp->last_entered->entity;
             auto hit_trans = (TransformComponent*)hit_by->get_component(CompType::TRANSFORM);
 
-            
-
             health_comp->hurt(30);
             anim_comp->play("hit");
         });
