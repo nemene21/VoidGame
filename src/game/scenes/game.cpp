@@ -3,6 +3,7 @@
 #include <entities/enemies/chaser/chaser.hpp>
 
 std::string player_username = "";
+float enemy_spawn_timer = 0;
 
 GameScene::GameScene(): Scene("game_scene") {
     unpackers[(int)PacketType::GENERATION] = [this](Packet* packet) {
@@ -24,15 +25,23 @@ void GameScene::restart() {
     player->nametag.text = player_username;
     CameraManager::bind_camera(player->camera_comp->get_camera());
     add_synced_entity(player, true);
-
-    auto enemy = new ChaserEnemy({300, 300});
-    add_synced_entity(enemy, true);
 }
 
 void GameScene::process(float delta) {
+    std::cout << enemy_spawn_timer << std::endl;
     if (Networking::active()) {
         Networking::process();
 
+        if (Networking::is_host) {
+            enemy_spawn_timer -= delta;
+            if (enemy_spawn_timer < 0) {
+                auto enemy = new ChaserEnemy(Vector2{
+                    (float)GetRandomValue(-300, 300), (float)GetRandomValue(-300, 300)
+                });
+                add_synced_entity(enemy, true);
+                enemy_spawn_timer = GetRandomValue(3, 5);
+            }
+        }
         if (IsKeyPressed(KEY_G) && Networking::is_host) {
             generate_level(rand64());
         }
