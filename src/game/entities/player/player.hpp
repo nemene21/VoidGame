@@ -17,7 +17,6 @@ public:
     static void init_projectiles();
 
     std::pair<EntitySyncPacket*, size_t> get_init_packet();
-    void receive_init_packet(EntitySyncPacket* packet);
 };
 
 #endif
