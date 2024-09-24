@@ -25,8 +25,8 @@ void Scene::process_entities(float delta) {
 
     // Process entities
     int i = 0;
-    while (i != entities.size()) {
-        Entity *entity = entities[i];
+    while (i++ < entities.size()) {
+        Entity *entity = entities[i-1];
         if (entity->is_death_queued())
             continue;
 
@@ -36,7 +36,6 @@ void Scene::process_entities(float delta) {
         }
 
         entity->process_components(delta);
-        i++;
     }
 
     comp_update_timer -= delta;
@@ -125,6 +124,26 @@ std::vector<Entity*> Scene::query_in_group(std::string name) {
 }
 
 void Scene::nuke_entity(Entity* entity) {
+    if (entity == nullptr)
+        return;
+
+    auto area_comp = (AreaComponent*)entity->get_component(CompType::AREA);
+    if (area_comp != nullptr) {
+        std::set<AreaComponent*> to_remove;
+
+        for (auto area: area_comp->areas_overlapping) {
+            area_comp->last_exited = area;
+            area_comp->area_exited.emit(entity);
+
+            area->areas_overlapping.erase(area_comp);
+            area->last_exited = area_comp;
+            area->area_exited.emit(area->entity);
+        }
+        for (auto removing: to_remove) {
+            area_comp->areas_overlapping.erase(removing);
+        }
+    }
+
     if (entities_by_name.find(entity->get_name()) != entities_by_name.end())
         entities_by_name.erase(entity->get_name());
 

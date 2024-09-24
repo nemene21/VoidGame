@@ -169,24 +169,30 @@ void AreaComponent::check_overlaps() {
         auto areas = AreaManager::get_nearby_areas(this, layer);
 
         for (auto area: areas) {
-            if (area == this)
+            if (area == this || area->entity->is_death_queued())
                 continue;
 
             if (overlaps(this, area)) {
                 // Add area if its not in
                 if (areas_overlapping.find(area) == areas_overlapping.end()) {
                     areas_overlapping.insert(area);
-
                     last_entered = area;
                     area_entered.emit(entity);
+
+                    area->areas_overlapping.insert(this);
+                    area->last_entered = this;
+                    area->area_entered.emit(area->entity);
                 }
             } else {
                 // Remove area if it is in
                 if (areas_overlapping.find(area) != areas_overlapping.end()) {
                     areas_overlapping.erase(area);
-
                     last_exited = area;
                     area_exited.emit(entity);
+
+                    area->areas_overlapping.erase(this);
+                    area->last_exited = this;
+                    area->area_exited.emit(area->entity);
                 }
             }
         }
@@ -216,7 +222,7 @@ void AreaComponent::debug_draw() {
         DrawRectangle(rect->x - rect->width*.5f, rect->y - rect->height*.5f, rect->width, rect->height, {0, 255, 0, 20});
     }
 }
-
+ 
 // Processes area component
 void AreaComponent::process(float delta) {
     update_shape_position();

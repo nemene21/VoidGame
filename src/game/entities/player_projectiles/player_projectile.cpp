@@ -15,7 +15,7 @@ PlayerProjectile::PlayerProjectile(Vector2 pos, Vector2 vel, float width, std::s
     area_comp->add_layer((int)AreaIndex::PLAYER_HITBOX);
     area_comp->add_mask_bit((int)AreaIndex::ENEMY_HURTBOX);
     area_comp->area_entered.connect([this](Entity* ent) {
-
+        queue_free();
     });
     add_component(area_comp);
 
