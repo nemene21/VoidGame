@@ -30,12 +30,12 @@ void Scene::process_entities(float delta) {
         if (entity->is_death_queued())
             continue;
 
+        entity->process_components(delta);
+
         entity->process(delta);
         if (!entity->is_synced() || entity->owned) {
             entity->private_process(delta);
         }
-
-        entity->process_components(delta);
     }
 
     comp_update_timer -= delta;
