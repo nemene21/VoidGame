@@ -12,7 +12,7 @@
 /// @brief Component responsible for postion, movement, scale and angle of an entity
 class TransformComponent: public Component {
 public:
-    Vector2 position, scale, velocity;
+    Vector2 position, scale, flip, velocity;
     float angle;
 
     TransformComponent(Entity *entity, Vector2 position = {0, 0}, Vector2 scale = {1, 1}, float angle = 0);

@@ -36,7 +36,7 @@ Player::Player(std::string username): Actor("test_guy.png", {0, 0}, 100),
             1 + sinf(GetTime() * 12) * 0.15,
             1 + cosf(GetTime() * 12) * 0.15
         };
-        desired_scale.x *= look_dir;
+        desired_scale.x *= trans_comp->flip.x;
  
         trans_comp->scale = Lerpi(trans_comp->scale, desired_scale, 20);
     });
@@ -107,6 +107,7 @@ void Player::private_process(float delta) {
     anim_comp->play(animation);
 
     look_dir = mouse_pos().x > trans_comp->position.x ? 1 : -1;
+    trans_comp->flip.x = look_dir;
 
     // Weapon swapping
     if (IsJustPressed("Swap Weapon")) {

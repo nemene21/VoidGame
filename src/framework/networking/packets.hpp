@@ -38,7 +38,7 @@ struct ComponentUpdatePacket: public Packet {
     uint8_t  component_type;
 };
 struct TransformUpdatePacket: public ComponentUpdatePacket {
-    Vector2 position, velocity, scale;
+    Vector2 position, velocity, scale, flip;
     float angle;
 };
 struct AnimationUpdatePacket: public ComponentUpdatePacket {

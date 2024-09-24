@@ -4,6 +4,7 @@ TransformComponent::TransformComponent(Entity *entity, Vector2 position, Vector2
     Component(ComponentType::TRANSFORM, entity),
     position {position},
     scale {scale},
+    flip {1, 1},
     velocity {0, 0},
     angle {angle}
     {}
@@ -26,7 +27,7 @@ void TransformComponent::network_update() {
         true,
         entity->id,
         type,
-        position, velocity, scale, angle
+        position, velocity, scale, flip, angle
     };
 
     Networking::send(&packet, sizeof(packet), false);
@@ -37,6 +38,7 @@ void TransformComponent::recieve_update(ComponentUpdatePacket* packet) {
     position = cast_packet->position;
     velocity = cast_packet->velocity;
     scale = cast_packet->scale;
+    flip  = cast_packet->flip;
     angle = cast_packet->angle;
 }
 
