@@ -39,7 +39,7 @@ void GameScene::process(float delta) {
                     (float)GetRandomValue(-300, 300), (float)GetRandomValue(-300, 300)
                 });
                 add_synced_entity(enemy, true);
-                enemy_spawn_timer = GetRandomValue(3, 5);
+                enemy_spawn_timer = GetRandomValue(2, 3);
             }
         }
         if (IsKeyPressed(KEY_G) && Networking::is_host) {

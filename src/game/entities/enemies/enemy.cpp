@@ -3,6 +3,7 @@
 
 Enemy::Enemy(StateComponent* state_machine, float health, std::string texture, Vector2 position, float radius):
     Actor(texture, position, health),
+    flash {0},
     state_machine {state_machine} {
 
         sprite.shader_bond.set_shader("flash.glsl");
@@ -25,14 +26,16 @@ Enemy::Enemy(StateComponent* state_machine, float health, std::string texture, V
         add_component(area_comp);
 
         anim_comp = new AnimationComponent(this);
-        anim_comp->make_animation("hit", 0.2, false);
+        anim_comp->make_animation("hit", 0.1, false);
         anim_comp->add_event("hit", 0, [this](float anim) {
-            float flash = 1;
-            sprite.shader_bond.send_uniform("flash", &flash, sizeof(float), SHADER_UNIFORM_FLOAT);
+            flash = 1;
         });
         anim_comp->add_event("hit", 0.1, [this](float anim) {
-            float flash = 0;
-            sprite.shader_bond.send_uniform("flash", &flash, sizeof(float), SHADER_UNIFORM_FLOAT);
+            flash = 0;
         });
         add_component(anim_comp);
     }
+
+void Enemy::process(float delta) {
+    sprite.shader_bond.send_uniform("flash", &flash, sizeof(float), SHADER_UNIFORM_FLOAT);
+}

@@ -10,6 +10,7 @@ ChaserEnemy::ChaserEnemy(Vector2 position):
     }
 
 void ChaserEnemy::process(float delta) {
+    Enemy::process(delta);
     sprite.update_transform(trans_comp);
 }
 
