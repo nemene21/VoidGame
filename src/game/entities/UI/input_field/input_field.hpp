@@ -7,6 +7,7 @@ public:
     Label label;
     Sprite edit_cursor;
     int char_on;
+    float delete_timer, delete_speed;
     std::string text, default_text;
     InputField(Vector2 position, int fontsize=20, std::string default_text="", std::string start_text="");
 

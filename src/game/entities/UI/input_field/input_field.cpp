@@ -1,5 +1,7 @@
 #include "input_field.hpp"
 
+#define DEFAULT_DELETE_SPEED .075f
+
 InputField::InputField(
     Vector2 position,
     int fontsize,
@@ -10,6 +12,8 @@ InputField::InputField(
     label {Label(position, start_text, fontsize)},
     edit_cursor {Sprite("UI/write_cursor.png")},
     char_on {start_text.size()},
+    delete_timer {0},
+    delete_speed {1},
     text {start_text},
     default_text {default_text} {
 
@@ -78,9 +82,18 @@ void InputField::process(float delta) {
     if (char_on > text.size()) char_on = text.size();
 
     // Char removal w backspace
-    if (IsJustPressed("Delete Char")) {
+    if (IsPressed("Delete Char")) {
+        delete_timer -= delete_speed * DEFAULT_DELETE_SPEED;
+        delete_speed += delta * 3;
+    } else {
+        delete_speed = 1;
+        delete_timer = 0;
+    }
+
+    if (delete_timer < 0) {
         if (char_on == 0) goto end;
-        
+        delete_timer = 1;
+
         text.erase(char_on-1, 1);
         char_on--;
     }
