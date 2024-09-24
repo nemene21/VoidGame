@@ -159,7 +159,7 @@ void Framework::debug_gui() {
 }
 
 void Framework::process_modules(float delta) {
-        // Processing data managers
+    // Processing data managers
     TextureManager::unload_check();
     ParticleDataManager::unload_check();
     
@@ -168,9 +168,6 @@ void Framework::process_modules(float delta) {
 
     ShaderManager::unload_check();
     ShaderManager::update_uniforms();
-
-    ColliderManager::reload_colliders();
-    AreaManager::reload_areas();
 
     #ifndef WEB
         RichPresence::update();
@@ -187,6 +184,10 @@ void Framework::process_modules(float delta) {
 
 void Framework::process_scene(float delta) {
     SceneManager::scene_on->process(delta);
+    
+    ColliderManager::reload_colliders();
+    AreaManager::reload_areas();
+
     SceneManager::scene_on->process_entities(delta);
 }
 
