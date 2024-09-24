@@ -459,19 +459,13 @@ std::pair<EntitySyncPacket*, size_t> ParticleEntity::get_init_packet() {
         PacketType::ENTITY_SYNC,
         true,
         EntityType::PARTICLE_SYSTEM,
-        id,
+        (uint32_t)id,
         owned,
-        system.z_coord,
+        (int8_t)system.z_coord,
         ""
     };
     const char *txt = system_path.c_str();
     strcpy(packet->system, txt);
 
-    return std::make_pair(packet, sizeof(*packet));
-}
-
-void ParticleEntity::receive_init_packet(EntitySyncPacket* packet) {
-    auto cast_packet = reinterpret_cast<EntityParticleSyncPacket*>(packet);
-    system.particle_data = ParticleDataManager::get(cast_packet->system);
-    system.reload_data();
+    return std::make_pair(packet, sizeof(EntityParticleSyncPacket));
 }

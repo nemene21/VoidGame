@@ -3,9 +3,9 @@
 
 auto weapon_factory = Factory<Weapon, std::function<Weapon*(int)>>((int)WeaponID::COUNT);
 
-Player::Player(): Actor("test_guy.png", {0, 0}, 100),
+Player::Player(std::string username): Actor("test_guy.png", {0, 0}, 100),
     run_particles {ParticleSystem("player_run.json")},
-    nametag {Label(half_res, "Miroslav", 10, {.5f, .5f})} {
+    nametag {Label(half_res, username, 10, {.5f, .5f})} {
     type = EntityType::PLAYER;
     
     // Drawing data
@@ -57,6 +57,21 @@ Player::Player(): Actor("test_guy.png", {0, 0}, 100),
 
     join_group("Player");
     set_name("Player");
+}
+
+std::pair<EntitySyncPacket*, size_t> Player::get_init_packet() {
+    auto packet = new EntityPlayerSyncPacket{
+        PacketType::ENTITY_SYNC,
+        true,
+        EntityType::PLAYER,
+        (uint32_t)id,
+        owned,
+        ""
+    };
+    const char *txt = nametag.text.c_str();
+    strcpy(packet->username, txt);
+
+    return std::make_pair(packet, sizeof(EntityPlayerSyncPacket));
 }
 
 void Player::process(float delta) {

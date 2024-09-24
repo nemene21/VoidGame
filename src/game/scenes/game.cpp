@@ -21,8 +21,7 @@ void GameScene::restart() {
     floor_tilemap->renderer.z_coord = -5;
     add_entity(floor_tilemap);
 
-    auto player = new Player();
-    player->nametag.text = player_username;
+    auto player = new Player(player_username);
     CameraManager::bind_camera(player->camera_comp->get_camera());
     add_synced_entity(player, true);
 }

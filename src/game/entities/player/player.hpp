@@ -9,12 +9,15 @@ public:
     Label nametag;
     int look_dir;
 
-    Player();
+    Player(std::string username = "[unnamed]");
     void process(float delta);
     void private_process(float delta);
     
     static void init_weapons();
     static void init_projectiles();
+
+    std::pair<EntitySyncPacket*, size_t> get_init_packet();
+    void receive_init_packet(EntitySyncPacket* packet);
 };
 
 #endif

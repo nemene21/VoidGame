@@ -219,8 +219,10 @@ void SceneManager::unload_all() {
 
 void SceneManager::init() {
     synced_entity_factory.setup((int)EntityType::PLAYER,
-    [](EntitySyncPacket* packet)
-        { return new Player(); });
+    [](EntitySyncPacket* packet) {
+        auto player_packet = (EntityPlayerSyncPacket*)packet;
+        return new Player(player_packet->username);
+    });
 
     synced_entity_factory.setup((int)EntityType::GUN,
     [](EntitySyncPacket* packet) {
