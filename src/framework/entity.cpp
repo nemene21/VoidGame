@@ -92,7 +92,7 @@ void Entity::queue_free() {
         true,
         (uint32_t)id
     };
-    std::cout << "Sending nuke to id " << id << std::endl;
+    // std::cout << "Sending nuke to id " << id << std::endl;
     Networking::send(&nuke, sizeof(nuke), true);
 }
 
@@ -132,7 +132,7 @@ bool Entity::has_component(ComponentType type) {
 
 Component *Entity::get_component(ComponentType type) {
     if (!has_component(type)) {
-        std::cout << "WARNING: component not found, returning nullptr" << std::endl;
+        // std::cout << "WARNING: component not found, returning nullptr" << std::endl;
         return nullptr;
     }
     return comps[type];

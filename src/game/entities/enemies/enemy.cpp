@@ -27,12 +27,10 @@ Enemy::Enemy(StateComponent* state_machine, float health, std::string texture, V
         anim_comp = new AnimationComponent(this);
         anim_comp->make_animation("hit", 0.2, false);
         anim_comp->add_event("hit", 0, [this](float anim) {
-            std::cout << "event 1" << std::endl;
             float flash = 1;
             sprite.shader_bond.send_uniform("flash", &flash, sizeof(float), SHADER_UNIFORM_FLOAT);
         });
         anim_comp->add_event("hit", 0.1, [this](float anim) {
-            std::cout << "event 2" << std::endl;
             float flash = 0;
             sprite.shader_bond.send_uniform("flash", &flash, sizeof(float), SHADER_UNIFORM_FLOAT);
         });
