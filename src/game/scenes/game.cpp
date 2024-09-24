@@ -27,7 +27,6 @@ void GameScene::restart() {
 }
 
 void GameScene::process(float delta) {
-    std::cout << enemy_spawn_timer << std::endl;
     if (Networking::active()) {
         Networking::process();
 
