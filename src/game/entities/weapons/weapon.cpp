@@ -8,7 +8,7 @@ Weapon::Weapon(int player_id, float firerate, bool automatic, std::string textur
     intro_anim {0},
     active {true},
     automatic {automatic},
-    reloaded {true}
+    reloaded {false}
     {
 
     // Timer component for reloading
@@ -17,6 +17,12 @@ Weapon::Weapon(int player_id, float firerate, bool automatic, std::string textur
     timer_comp->get_timer("reload")->finished.connect([this](Entity* ent) {
         reloaded = true;
     });
+
+    timer_comp->add_timer("preload", GetFrameTime()*1.1);
+    timer_comp->get_timer("preload")->finished.connect([this](Entity* ent) {
+        reloaded = true;
+    });
+    timer_comp->get_timer("preload")->start();
     add_component(timer_comp);
 
     trans_comp = new TransformComponent(this, {0, 0});
