@@ -6,8 +6,18 @@ auto weapon_factory = Factory<Weapon, std::function<Weapon*(int)>>((int)WeaponID
 Player::Player(std::string username): Actor("test_guy.png", {0, 0}, 100),
     run_particles {ParticleSystem("player_run.json")},
     nametag {Label(half_res, username, 10, {.5f, .5f})},
-    weapon_equped_index {0} {
+    weapon_equped_index {0},
+    weapon_number {2} {
     type = EntityType::PLAYER;
+
+    // Weapon data
+    weapons = {
+        HeldWeaponData{
+            0, (int)WeaponID::BURST_TEST
+        }, HeldWeaponData{
+            0, (int)WeaponID::SHOTGUN_TEST
+        }
+    };
     
     // Drawing data
     sprite.offset.y = -11;
@@ -86,6 +96,22 @@ void Player::process(float delta) {
     nametag.angle = 0;
 }
 
+void Player::swap_weapon() {
+    weapon_equped_index++;
+    if (weapon_equped_index == weapon_number)
+        weapon_equped_index = 0;
+        
+    auto data = weapons[weapon_equped_index];
+    auto weapon = weapon_factory.get(data.weapon_id)(id);
+
+    weapon->timer_comp->get_timer("preload")->duration = (
+        weapon->timer_comp->get_timer("reload")->duration * data.reload_progress
+        + GetFrameTime() * 1.1f
+    );
+    weapon->timer_comp->get_timer("preload")->start();
+    SceneManager::scene_on->add_synced_entity(weapon, true);
+}
+
 void Player::private_process(float delta) {
     // Camera movement
     Vector2 mouse_offset = mouse_screen_pos() - half_res;
@@ -112,13 +138,7 @@ void Player::private_process(float delta) {
 
     // Weapon swapping
     if (IsJustPressed("Swap Weapon")) {
-        weapon_equped_index++;
-        if (weapon_equped_index == 2) weapon_equped_index = 0;
-
-        auto weapon = weapon_factory.get(
-            weapon_equped_index == 0 ? (int)WeaponID::BURST_TEST : (int)WeaponID::SHOTGUN_TEST
-        )(id);
-        SceneManager::scene_on->add_synced_entity(weapon, true);
+        swap_weapon();
     }
 }
 

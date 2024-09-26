@@ -22,7 +22,6 @@ Weapon::Weapon(int player_id, float firerate, bool automatic, std::string textur
     timer_comp->get_timer("preload")->finished.connect([this](Entity* ent) {
         reloaded = true;
     });
-    timer_comp->get_timer("preload")->start();
     add_component(timer_comp);
 
     trans_comp = new TransformComponent(this, {0, 0});
