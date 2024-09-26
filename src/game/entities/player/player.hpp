@@ -8,6 +8,7 @@ public:
     CameraComponent* camera_comp;
     Label nametag;
     int look_dir;
+    int weapon_equped_index;
 
     Player(std::string username = "[unnamed]");
     void process(float delta);

@@ -12,7 +12,8 @@
 #define WEAPON_INTRO_SPEED 8.f
 
 enum class WeaponID {
-    TEST,
+    BURST_TEST,
+    SHOTGUN_TEST,
     COUNT,
 };
 

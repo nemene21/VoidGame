@@ -5,7 +5,8 @@ auto weapon_factory = Factory<Weapon, std::function<Weapon*(int)>>((int)WeaponID
 
 Player::Player(std::string username): Actor("test_guy.png", {0, 0}, 100),
     run_particles {ParticleSystem("player_run.json")},
-    nametag {Label(half_res, username, 10, {.5f, .5f})} {
+    nametag {Label(half_res, username, 10, {.5f, .5f})},
+    weapon_equped_index {0} {
     type = EntityType::PLAYER;
     
     // Drawing data
@@ -111,7 +112,12 @@ void Player::private_process(float delta) {
 
     // Weapon swapping
     if (IsJustPressed("Swap Weapon")) {
-        auto weapon = weapon_factory.get((int)WeaponID::TEST)(id);
+        weapon_equped_index++;
+        if (weapon_equped_index == 2) weapon_equped_index = 0;
+
+        auto weapon = weapon_factory.get(
+            weapon_equped_index == 0 ? (int)WeaponID::BURST_TEST : (int)WeaponID::SHOTGUN_TEST
+        )(id);
         SceneManager::scene_on->add_synced_entity(weapon, true);
     }
 }
@@ -125,11 +131,18 @@ void Player::init_projectiles() {
 }
 
 void Player::init_weapons() {
-    weapon_factory.setup((int)WeaponID::TEST, [](int player_id) -> Weapon* {
+    weapon_factory.setup((int)WeaponID::BURST_TEST, [](int player_id) -> Weapon* {
         auto gun = new Gun(player_id, 2.f, 0.05f, true, (std::string)"test_gun.png", ShotPattern{
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}},
             {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 8, 1}}
+        }, 16);
+        return gun;
+    });
+
+    weapon_factory.setup((int)WeaponID::SHOTGUN_TEST, [](int player_id) -> Weapon* {
+        auto gun = new Gun(player_id, 1.f, 0.05f, true, (std::string)"test_gun.png", ShotPattern{
+            {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 24, 5}},
         }, 16);
         return gun;
     });
