@@ -13,7 +13,7 @@ Player::Player(std::string username): Actor("test_guy.png", {0, 0}, 100),
     // Weapon data
     weapons = {
         HeldWeaponData{
-            0, (int)WeaponID::BURST_TEST
+            0, (int)WeaponID::SHOTGUN_TEST
         }, HeldWeaponData{
             0, (int)WeaponID::SHOTGUN_TEST
         }
@@ -100,14 +100,12 @@ void Player::swap_weapon() {
     weapon_equped_index++;
     if (weapon_equped_index == weapon_number)
         weapon_equped_index = 0;
-        
+    
     auto data = weapons[weapon_equped_index];
     auto weapon = weapon_factory.get(data.weapon_id)(id);
 
-    weapon->timer_comp->get_timer("preload")->duration = (
-        data.reload_progress + GetFrameTime() * 1.1f
-    );
-    weapon->timer_comp->get_timer("preload")->start();
+    weapon->timer_comp->get_timer("reload")->progress = data.reload_progress;
+    weapon->timer_comp->get_timer("reload")->start();
     SceneManager::scene_on->add_synced_entity(weapon, true);
 }
 

@@ -6,21 +6,17 @@ Weapon::Weapon(int player_id, float firerate, bool automatic, std::string textur
     texture_name {texture},
     player_id {player_id},
     intro_anim {0},
+    reload_time {1.f/firerate},
     active {true},
     automatic {automatic},
     reloaded {false}
     {
-
     // Timer component for reloading
     timer_comp = new TimerComponent(this);
-    timer_comp->add_timer("reload", 1.f/firerate);
+    timer_comp->add_timer("reload", reload_time);
     timer_comp->get_timer("reload")->finished.connect([this](Entity* ent) {
         reloaded = true;
-    });
-
-    timer_comp->add_timer("preload", GetFrameTime()*1.1);
-    timer_comp->get_timer("preload")->finished.connect([this](Entity* ent) {
-        reloaded = true;
+        timer_comp->get_timer("reload")->duration = reload_time;
     });
     add_component(timer_comp);
 
@@ -40,16 +36,13 @@ void Weapon::private_process(float delta) {
     }
 
     if (active) {
+
         if (IsJustPressed("Swap Weapon") && intro_anim != 0) {
             active = false;
-
+        } else {
             auto player = (Player*)SceneManager::scene_on->get_entity_by_id(player_id);
-            int index = player->weapon_equped_index-1;
-            if (index < 0)
-                index = player->weapon_number-1;
-
             auto timer = timer_comp->get_timer("reload");
-            player->weapons[index].reload_progress = timer->progress;
+            player->weapons[player->weapon_equped_index].reload_progress = timer->progress;
         }
         // Increment spawn animation
         intro_anim = fminf(1, intro_anim + delta * WEAPON_INTRO_SPEED);

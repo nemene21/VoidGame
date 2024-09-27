@@ -23,6 +23,7 @@ public:
     std::string texture_name;
     int player_id;
     float intro_anim;
+    float reload_time;
     bool active;
     bool automatic;
 
