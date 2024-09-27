@@ -12,6 +12,9 @@ public:
     void new_value(const std::string& name, float value);
     void new_mult(const std::string& name, float multiplier);
 
+    void add_value(const std::string& name, float incrvalue);
+    void add_mult(const std::string& name, float incrmult);
+
 private:
     std::map<std::string, float> stat;
     std::map<std::string, float> multiplier;

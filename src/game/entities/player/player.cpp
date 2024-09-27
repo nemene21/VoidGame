@@ -100,15 +100,12 @@ void Player::swap_weapon() {
     weapon_equped_index++;
     if (weapon_equped_index == weapon_number)
         weapon_equped_index = 0;
-        
+    
     auto data = weapons[weapon_equped_index];
     auto weapon = weapon_factory.get(data.weapon_id)(id);
 
-    std::cout << "Progress: " << data.reload_progress << std::endl;
-    weapon->timer_comp->get_timer("preload")->duration = (
-        data.reload_progress + GetFrameTime() * 1.1f
-    );
-    weapon->timer_comp->get_timer("preload")->start();
+    weapon->timer_comp->get_timer("reload")->progress = data.reload_progress;
+    weapon->timer_comp->get_timer("reload")->start();
     SceneManager::scene_on->add_synced_entity(weapon, true);
 }
 
