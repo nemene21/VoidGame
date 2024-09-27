@@ -6,13 +6,11 @@
 
 class Stats {
 public:
-    void newstat(const std::string& name, float value, float multiplier);
+    void fetch_stat(const std::string& name) const;
 
-    void fetchstat(const std::string& name) const;
-
-    void newvalue(const std::string& name, float value);
-
-    void newmulti(const std::string& name, float multiplier);
+    void new_stat(const std::string& name, float value, float multiplier);
+    void new_value(const std::string& name, float value);
+    void new_mult(const std::string& name, float multiplier);
 
 private:
     std::map<std::string, float> stat;

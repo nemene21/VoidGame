@@ -42,6 +42,8 @@ void Weapon::private_process(float delta) {
     if (active) {
         if (IsJustPressed("Swap Weapon") && intro_anim != 0) {
             active = false;
+
+            auto player = SceneManager::scene_on->get_entity_by_id();
         }
         // Increment spawn animation
         intro_anim = fminf(1, intro_anim + delta * WEAPON_INTRO_SPEED);
