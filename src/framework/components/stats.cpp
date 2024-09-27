@@ -25,3 +25,11 @@ void Stats::new_mult(const std::string& name, float multiplierValue) {
         multiplier[name] = multiplierValue;
     }
 }
+
+void Stats::add_value(const std::string& name, float incrvalue) {
+    stat[name] += incrvalue;
+}
+
+void Stats::add_mult(const std::string& name, float incrmult) {
+    multiplier[name] += incrmult;
+}
