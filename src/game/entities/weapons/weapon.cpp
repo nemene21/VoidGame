@@ -43,7 +43,13 @@ void Weapon::private_process(float delta) {
         if (IsJustPressed("Swap Weapon") && intro_anim != 0) {
             active = false;
 
-            auto player = SceneManager::scene_on->get_entity_by_id();
+            auto player = (Player*)SceneManager::scene_on->get_entity_by_id(player_id);
+            int index = player->weapon_equped_index-1;
+            if (index < 0)
+                index = player->weapon_number-1;
+
+            auto timer = timer_comp->get_timer("reload");
+            player->weapons[index].reload_progress = timer->progress;
         }
         // Increment spawn animation
         intro_anim = fminf(1, intro_anim + delta * WEAPON_INTRO_SPEED);

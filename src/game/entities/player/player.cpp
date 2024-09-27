@@ -104,9 +104,9 @@ void Player::swap_weapon() {
     auto data = weapons[weapon_equped_index];
     auto weapon = weapon_factory.get(data.weapon_id)(id);
 
+    std::cout << "Progress: " << data.reload_progress << std::endl;
     weapon->timer_comp->get_timer("preload")->duration = (
-        weapon->timer_comp->get_timer("reload")->duration * data.reload_progress
-        + GetFrameTime() * 1.1f
+        data.reload_progress + GetFrameTime() * 1.1f
     );
     weapon->timer_comp->get_timer("preload")->start();
     SceneManager::scene_on->add_synced_entity(weapon, true);
