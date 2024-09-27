@@ -54,6 +54,8 @@ void Weapon::private_process(float delta) {
     // Scale spawn animation
     float blend = Easing::back_in(intro_anim);
     trans_comp->scale = {blend, blend};
+
+    timer_comp->get_timer("reload")->paused = active;
 }
 
 // Takes care of automatic/non automatic cases
