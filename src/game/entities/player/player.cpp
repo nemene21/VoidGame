@@ -104,7 +104,6 @@ void Player::swap_weapon() {
     auto data = weapons[weapon_equped_index];
     auto weapon = weapon_factory.get(data.weapon_id)(id);
 
-    std::cout << "Progress: " << data.reload_progress << std::endl;
     weapon->timer_comp->get_timer("preload")->duration = (
         data.reload_progress + GetFrameTime() * 1.1f
     );

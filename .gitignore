@@ -5,3 +5,4 @@
 *.data
 /build/web_build/index.html
 .vscode
+Makefile
