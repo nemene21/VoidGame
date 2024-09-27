@@ -104,14 +104,16 @@ void Player::swap_weapon() {
     auto data = weapons[weapon_equped_index];
     auto weapon = weapon_factory.get(data.weapon_id)(id);
 
-    weapon->timer_comp->get_timer("reload")->progress = data.reload_progress;
     weapon->timer_comp->get_timer("reload")->start();
+    weapon->timer_comp->get_timer("reload")->progress = data.reload_progress;
     SceneManager::scene_on->add_synced_entity(weapon, true);
 }
 
 void Player::private_process(float delta) {
     // Camera movement
     Vector2 mouse_offset = mouse_screen_pos() - half_res;
+    std::cout << "rel1 " << weapons[0].reload_progress << std::endl;
+    std::cout << "rel2 " << weapons[1].reload_progress << std::endl;
 
     mouse_offset /= half_res.y; // -1 : 1 range
     if (Vector2Length(mouse_offset) > 1)

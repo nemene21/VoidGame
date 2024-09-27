@@ -16,7 +16,6 @@ Weapon::Weapon(int player_id, float firerate, bool automatic, std::string textur
     timer_comp->add_timer("reload", reload_time);
     timer_comp->get_timer("reload")->finished.connect([this](Entity* ent) {
         reloaded = true;
-        timer_comp->get_timer("reload")->duration = reload_time;
     });
     add_component(timer_comp);
 
@@ -34,9 +33,7 @@ void Weapon::private_process(float delta) {
     if (intro_anim == 0) {
         trans_comp->position = get_player_pos();
     }
-
     if (active) {
-
         if (IsJustPressed("Swap Weapon") && intro_anim != 0) {
             active = false;
         } else {

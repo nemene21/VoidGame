@@ -16,9 +16,7 @@ Timer::Timer(std::string name, float duration, Entity *entity):
 
 void Timer::start() {
     if (running == true) return;
-     
-    progress = 0;
-    running = true;
+    restart();
 }
 
 void Timer::restart() {
@@ -34,10 +32,8 @@ void Timer::process(float delta) {
     progress += delta * (float)(!paused) * (float)(running);
 
     if (progress >= duration) {
-        progress -= duration;
         running   = repeat;
-
-        if (!running) progress = 0;
+        if (running) progress = 0;
 
         finished.emit(entity);
     }
