@@ -13,7 +13,7 @@ Player::Player(std::string username): Actor("test_guy.png", {0, 0}, 100),
     // Weapon data
     weapons = {
         HeldWeaponData{
-            0, (int)WeaponID::SHOTGUN_TEST
+            0, (int)WeaponID::BURST_TEST
         }, HeldWeaponData{
             0, (int)WeaponID::SHOTGUN_TEST
         }
