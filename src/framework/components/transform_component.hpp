@@ -12,8 +12,8 @@
 /// @brief Component responsible for postion, movement, scale and angle of an entity
 class TransformComponent: public Component {
 public:
-    Vector2 position, scale, flip, velocity;
-    float angle;
+    Vector2 position, knockback, scale, flip, velocity;
+    float angle, kb_decay_rate;
 
     TransformComponent(Entity *entity, Vector2 position = {0, 0}, Vector2 scale = {1, 1}, float angle = 0);
 
@@ -40,6 +40,8 @@ public:
     /// @brief Add a speed to the velocity
     /// @param by Speed to add
     void accelerate(Vector2 by);
+
+    Vector2 movement();
 
     void process(float delta);
     void check_bounds(Vector2 direction);

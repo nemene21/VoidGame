@@ -6,6 +6,7 @@ TransformComponent::TransformComponent(Entity *entity, Vector2 position, Vector2
     scale {scale},
     flip {1, 1},
     velocity {0, 0},
+    knockback {0, 0},
     angle {angle}
     {}
 
@@ -27,7 +28,7 @@ void TransformComponent::network_update() {
         true,
         entity->id,
         type,
-        position, velocity, scale, flip, angle
+        position, velocity, knockback, scale, flip, angle, kb_decay_rate
     };
 
     Networking::send(&packet, sizeof(packet), false);
@@ -37,9 +38,11 @@ void TransformComponent::recieve_update(ComponentUpdatePacket* packet) {
     auto cast_packet = reinterpret_cast<TransformUpdatePacket*>(packet);
     position = cast_packet->position;
     velocity = cast_packet->velocity;
+    knockback = cast_packet->knockback;
     scale = cast_packet->scale;
     flip  = cast_packet->flip;
     angle = cast_packet->angle;
+    kb_decay_rate = cast_packet->kb_decay_rate;
 }
 
 void TransformComponent::draw_gui_info() {
@@ -78,18 +81,25 @@ void TransformComponent::check_bounds(Vector2 direction) {
     }
 }
 
+Vector2 TransformComponent::movement() {
+    return velocity + knockback;
+}
+
 void TransformComponent::process(float delta) {
-    position.x += velocity.x * delta;
-    if (abs(velocity.x) > 0.1f)
-        check_bounds({(float)(velocity.x > 0.f) * 2.f - 1.f, 0.f});
+    knockback = Lerpi(knockback, {0, 0}, kb_decay_rate);
+    auto mov = movement();
+
+    position.x += mov.x * delta;
+    if (abs(mov.x) > 0.1f)
+        check_bounds({(float)(mov.x > 0.f) * 2.f - 1.f, 0.f});
 
     else if(entity->has_component(CompType::COLLIDER))
         ((ColliderComponent*)entity->get_component(CompType::COLLIDER))->position.x = position.x;
     
 
-    position.y += velocity.y * delta;
-    if (abs(velocity.y) > 0.1f)
-        check_bounds({0.f, (float)(velocity.y > 0.f) * 2.f - 1.f});
+    position.y += mov.y * delta;
+    if (abs(mov.y) > 0.1f)
+        check_bounds({0.f, (float)(mov.y > 0.f) * 2.f - 1.f});
 
     else if (entity->has_component(CompType::COLLIDER))
         ((ColliderComponent*)entity->get_component(CompType::COLLIDER))->position.y = position.y;
