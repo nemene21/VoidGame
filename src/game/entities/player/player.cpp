@@ -104,8 +104,8 @@ void Player::swap_weapon() {
     auto data = weapons[weapon_equped_index];
     auto weapon = weapon_factory.get(data.weapon_id)(id);
 
-    weapon->timer_comp->get_timer("reload")->progress = data.reload_progress;
     weapon->timer_comp->get_timer("reload")->start();
+    weapon->timer_comp->get_timer("reload")->progress = data.reload_progress;
     SceneManager::scene_on->add_synced_entity(weapon, true);
 }
 
@@ -159,7 +159,7 @@ void Player::init_weapons() {
 
     weapon_factory.setup((int)WeaponID::SHOTGUN_TEST, [](int player_id) -> Weapon* {
         auto gun = new Gun(player_id, 1.f, 0.05f, true, (std::string)"test_gun.png", ShotPattern{
-            {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 24, 5}},
+            {PlayerShot{PlayerProjectileType::BASE_BULLET, 0, 60, 5}},
         }, 16);
         return gun;
     });

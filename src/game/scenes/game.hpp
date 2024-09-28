@@ -15,6 +15,7 @@ struct GenData {
 class GameScene: public Scene {
 public:
     Tilemap* floor_tilemap;
+    Sprite background;
 
     GameScene();
     void restart();
