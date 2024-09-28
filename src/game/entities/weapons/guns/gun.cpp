@@ -64,7 +64,7 @@ void Gun::private_process(float delta) {
 
     trans_comp->position = Lerpi(
         trans_comp->position,
-        player_pos - Vector2{0.f, height}, 30);
+        player_pos - Vector2{0.f, height}, 40);
 
     // Flipping gun when on left
     trans_comp->scale.y = mouse_pos().x > player_pos.x ? 1 : -1;
