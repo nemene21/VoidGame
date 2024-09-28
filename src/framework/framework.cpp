@@ -87,6 +87,8 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale, bo
 }
 
 void Framework::debug_gui() {
+    char command[50];
+
     rlImGuiBegin();
     ImVec4 performance_color = frame_time > (1.0/60.0 * 1000) ?
         ImVec4(1, 0, 0, 1) : ImVec4(0, 1, 0, 1);
@@ -155,7 +157,35 @@ void Framework::debug_gui() {
     ImGui::Checkbox("Draw colliders", &DRAW_COLLIDERS);
 
     ImGui::ColorEdit4("Background color", background_color);
+
+    ImGui::InputText("Command line", command, IM_ARRAYSIZE(command) );
+
+    std::vector<std::string> test = parse_command(command);
+
+
     rlImGuiEnd();
+}
+
+std::vector<std::string> Framework::parse_command(char* input) {
+    std::string raw_string = input;
+    std::vector<std::string> variables;
+
+
+    while (raw_string.find("  ") != std::string::npos){
+        int index = raw_string.find("  ");
+        raw_string = raw_string.substr(0, index) + raw_string.substr(index + 1, raw_string.length() - index);
+    }
+
+    if (raw_string[0] == ' ') raw_string = raw_string.substr(1, raw_string.length() - 1);
+
+
+    while (raw_string.find(" ") != std::string::npos){
+        int var_index = raw_string.find(" ");
+        variables.push_back(raw_string.substr(0, var_index));
+        raw_string = raw_string.substr(var_index + 1, raw_string.length() - var_index);    
+    }
+
+    return variables;
 }
 
 void Framework::process_modules(float delta) {
