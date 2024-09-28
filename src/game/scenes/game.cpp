@@ -1,11 +1,12 @@
 #include "game.hpp"
 #include <entities/UI/input_field/input_field.hpp>
 #include <entities/enemies/chaser/chaser.hpp>
+#include <entities/background.hpp>
 
 std::string player_username = "";
 float enemy_spawn_timer = 0;
 
-GameScene::GameScene(): Scene("game_scene") {
+GameScene::GameScene(): Scene("game_scene"), background {Sprite("320x180.png")} {
     unpackers[(int)PacketType::GENERATION] = [this](Packet* packet) {
         auto cast_packet = reinterpret_cast<GenerationPacket*>(packet);
         generate_level(cast_packet->seed);
@@ -24,6 +25,8 @@ void GameScene::restart() {
     auto player = new Player(player_username);
     CameraManager::bind_camera(player->camera_comp->get_camera());
     add_synced_entity(player, true);
+    
+    add_entity(new Background());
 }
 
 void GameScene::process(float delta) {
