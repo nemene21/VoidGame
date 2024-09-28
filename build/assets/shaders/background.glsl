@@ -66,10 +66,10 @@ void main()
     vec2 diff = center - uv;
     float dist = length(diff);
 
-    vec2 noise_sample_pos = vec2(angle(diff) / 3.14, time * 0.1);
+    vec2 noise_sample_pos = vec2(angle(diff) / 3.14, time * 0.05);
     float noise_value = texture2D(noise, noise_sample_pos).r;
 
-    float glow_sine = cos(time * 2.0) * 0.04;
+    float glow_sine = sin(time + 0.5) * 0.04;
     float animated_halo_radius = halo_radius + noise_value * 0.05;
     animated_halo_radius += glow_sine;
 
@@ -78,7 +78,7 @@ void main()
 
     noise_value = pow(noise_value, 5.0) * 0.25;
     float animated_hole_radius = hole_radius + noise_value;
-    animated_hole_radius += sin(time * 2.0) * 0.03;
+    animated_hole_radius += sin(time) * 0.03;
 
     float light = 1.0 + dot(light_dir, normalize(diff)) * 0.2;
 
