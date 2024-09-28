@@ -56,5 +56,6 @@ void Weapon::private_process(float delta) {
 
 // Takes care of automatic/non automatic cases
 bool Weapon::trying_to_shoot() {
+    if (!active) return false;
     return ((automatic && IsPressed("Shoot")) || (!automatic && IsJustPressed("Shoot")));
 }
