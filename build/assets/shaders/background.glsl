@@ -11,7 +11,7 @@ uniform float ring_radius;
 uniform float halo_radius;
 
 uniform float zoom;
-uniform float offset;
+uniform vec2 offset;
 
 const float aspect_ratio = 320.0 / 180.0;
 
@@ -36,7 +36,7 @@ vec3 max_color(vec3 first, vec3 other) {
 void main()
 {
     vec2 uv = vec2(fragTexCoord.x, fragTexCoord.y);
-    
+
     uv -= vec2(.5, .5);
     uv += offset;
     uv *= zoom;

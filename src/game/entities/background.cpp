@@ -27,7 +27,7 @@ void Background::process(float delta) {
     float zoom = 2;
     bond.send_uniform("zoom", &zoom, sizeof(zoom), SHADER_UNIFORM_FLOAT);
 
-    Vector2 offset = {0, 0};
+    Vector2 offset = {0.25, 0.25};
     bond.send_uniform("offset", &offset, sizeof(offset), SHADER_UNIFORM_VEC2);
 
     bond.bind_texture("noise", TextureManager::get("noise.png"));
