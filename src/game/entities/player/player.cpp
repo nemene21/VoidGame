@@ -112,8 +112,6 @@ void Player::swap_weapon() {
 void Player::private_process(float delta) {
     // Camera movement
     Vector2 mouse_offset = mouse_screen_pos() - half_res;
-    std::cout << "rel1 " << weapons[0].reload_progress << std::endl;
-    std::cout << "rel2 " << weapons[1].reload_progress << std::endl;
 
     mouse_offset /= half_res.y; // -1 : 1 range
     if (Vector2Length(mouse_offset) > 1)
