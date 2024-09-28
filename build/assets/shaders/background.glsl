@@ -16,6 +16,8 @@ uniform vec2 offset;
 const float aspect_ratio = 320.0 / 180.0;
 
 const float num_colors = 6.0;
+const float rotation = 0.2;
+const vec2 light_dir = vec2(1.0, 1.0);
 
 const vec4 BLACK = vec4(0, 0, 0, 1);
 const vec4 ORANGE = vec4(0.85, 0.53, 0.24, 1);
@@ -23,6 +25,16 @@ uniform sampler2D noise;
 
 float angle(vec2 v) {
     return atan(v.y, v.x);
+}
+
+vec2 rotate(vec2 v, float angle) {
+    float cosA = cos(angle);
+    float sinA = sin(angle);
+    
+    return vec2(
+        v.x * cosA - v.y * sinA,
+        v.x * sinA + v.y * cosA
+    );
 }
 
 vec3 max_color(vec3 first, vec3 other) {
@@ -38,6 +50,10 @@ void main()
     vec2 uv = vec2(fragTexCoord.x, fragTexCoord.y);
 
     uv -= vec2(.5, .5);
+    uv.x *= aspect_ratio;
+    uv = rotate(uv, rotation);
+    uv.x /= aspect_ratio;
+
     uv += offset;
     uv *= zoom;
     uv += vec2(.5, .5);
@@ -64,13 +80,15 @@ void main()
     float animated_hole_radius = hole_radius + noise_value;
     animated_hole_radius += sin(time * 2.0) * 0.03;
 
+    float light = 1.0 + dot(light_dir, normalize(diff)) * 0.2;
+
     if (dist < animated_hole_radius) {
         gl_FragColor = BLACK;
     }
     else if (dist < animated_halo_radius) {
         float anim = dist / animated_halo_radius;
         gl_FragColor = ORANGE;
-        gl_FragColor.rgb *= smoothstep(1.0, 0.65, anim);
+        gl_FragColor.rgb *= smoothstep(1.0, 0.65, anim) * light;
     }
     float ring_dist = length(vec2(diff.x, diff.y * 4.0));
 
@@ -80,7 +98,7 @@ void main()
     if (in_ring) {
         float anim = ring_dist / animated_ring_radius;
         gl_FragColor.rgb = max_color(
-            gl_FragColor.rgb, ORANGE.rgb * smoothstep(1.0, 0.5, anim)
+            gl_FragColor.rgb, ORANGE.rgb * smoothstep(1.0, 0.5, anim) * light
         );
     }
     gl_FragColor.rgb *= texture2D(noise, uv + time*0.1).rgb * 0.4 + 0.8;

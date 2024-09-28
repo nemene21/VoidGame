@@ -86,7 +86,7 @@ void send_generation_packet(uint64_t seed) {
 void GameScene::generate_level(uint64_t seed) {
     srand(seed);
     auto data = GenData{
-        200, 300,
+        50, 60,
         0.75f
     };
     
@@ -96,7 +96,11 @@ void GameScene::generate_level(uint64_t seed) {
     auto floor_tiles = generate_floor_tiles(data);
 
     for (auto pos: floor_tiles) {
-        floor_tilemap->set_tile(pos, 0);
+        auto actual_pos = pos*2;
+        floor_tilemap->set_tile(actual_pos, 0);
+        floor_tilemap->set_tile(actual_pos+Vector2{1, 0}, 0);
+        floor_tilemap->set_tile(actual_pos+Vector2{0, 1}, 0);
+        floor_tilemap->set_tile(actual_pos+Vector2{1, 1}, 0);
     }
     floor_tilemap->build();
 }
