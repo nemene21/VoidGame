@@ -23,6 +23,7 @@ public:
     void process(float delta);
 
     void generate_level(uint64_t seed);
+    void generate_enemies(std::set<Vector2> &tiles);
     std::set<Vector2> generate_floor_tiles(GenData& data);
 };
 
