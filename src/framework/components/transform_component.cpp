@@ -7,6 +7,7 @@ TransformComponent::TransformComponent(Entity *entity, Vector2 position, Vector2
     flip {1, 1},
     velocity {0, 0},
     knockback {0, 0},
+    kb_decay_rate {15},
     angle {angle}
     {}
 
