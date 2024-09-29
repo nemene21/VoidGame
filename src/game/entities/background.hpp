@@ -5,7 +5,8 @@
 
 class Background: public Entity {
 public:
-    Sprite sprite;
+    Sprite hole_sprite;
+    Sprite star_sprite;
     Background();
     void process(float delta);
 };

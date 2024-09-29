@@ -21,6 +21,7 @@ const vec2 light_dir = vec2(1.0, 1.0);
 
 const vec4 BLACK = vec4(0, 0, 0, 1);
 const vec4 ORANGE = vec4(0.85, 0.53, 0.24, 1);
+uniform sampler2D hole_colors;
 uniform sampler2D noise;
 
 float angle(vec2 v) {
@@ -45,6 +46,14 @@ vec3 max_color(vec3 first, vec3 other) {
     );
 }
 
+vec3 get_color(float anim) {
+    anim /= 1.5;
+    anim = floor(anim * num_colors) / num_colors;
+    anim = max(anim, 0.01);
+    anim = min(anim, 0.99);
+    return texture2D(hole_colors, vec2(anim, 0.0)).rgb;
+}
+
 void main()
 {
     vec2 uv = vec2(fragTexCoord.x, fragTexCoord.y);
@@ -60,8 +69,6 @@ void main()
 
     uv += texture2D(noise, uv + time).rg * 0.01;
     uv.x *= aspect_ratio;
-
-    gl_FragColor.a = 1.0;
 
     vec2 diff = center - uv;
     float dist = length(diff);
@@ -80,15 +87,18 @@ void main()
     float animated_hole_radius = hole_radius + noise_value;
     animated_hole_radius += sin(time) * 0.03;
 
-    float light = 1.0 + dot(light_dir, normalize(diff)) * 0.2;
+    float light = 1.3 + dot(light_dir, normalize(diff)) * 0.4;
+    light *= texture2D(noise, uv + time*0.1).r * 0.3 + 0.8;
 
     if (dist < animated_hole_radius) {
         gl_FragColor = BLACK;
+        if (dist > hole_radius) {
+            gl_FragColor = vec4(0.1, 0.1, 0.2, 1);
+        }
     }
     else if (dist < animated_halo_radius) {
         float anim = dist / animated_halo_radius;
-        gl_FragColor = ORANGE;
-        gl_FragColor.rgb *= smoothstep(1.0, 0.65, anim) * light;
+        gl_FragColor.rgb = get_color(smoothstep(1.0, 0.65, anim) * light);
     }
     float ring_dist = length(vec2(diff.x, diff.y * 4.0));
 
@@ -98,12 +108,11 @@ void main()
     if (in_ring) {
         float anim = ring_dist / animated_ring_radius;
         gl_FragColor.rgb = max_color(
-            gl_FragColor.rgb, ORANGE.rgb * smoothstep(1.0, 0.5, anim) * light
+            gl_FragColor.rgb, get_color(smoothstep(1.0, 0.5, anim) * light)
         );
     }
-    gl_FragColor.rgb *= texture2D(noise, uv + time*0.1).rgb * 0.4 + 0.8;
 
-    gl_FragColor.r = floor(gl_FragColor.r * num_colors) / num_colors;
-    gl_FragColor.g = floor(gl_FragColor.g * num_colors) / num_colors;
-    gl_FragColor.b = floor(gl_FragColor.b * num_colors) / num_colors;
+    if ((gl_FragColor.r + gl_FragColor.g + gl_FragColor.b) > 0.1) {
+        gl_FragColor.a = 1.0;
+    }
 }
