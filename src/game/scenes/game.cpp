@@ -105,6 +105,7 @@ void GameScene::generate_level(uint64_t seed) {
 
     auto floor_tiles = generate_floor_tiles(data);
     generate_enemies(floor_tiles);
+    generate_endgate(floor_tiles);
 
     for (auto pos: floor_tiles) {
         auto actual_pos = pos*2;
