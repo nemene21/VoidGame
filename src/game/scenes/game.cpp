@@ -80,7 +80,7 @@ void GameScene::generate_enemies(std::set<Vector2> &tiles) {
     for (int i = 0; i < 20; i++) {
         Vector2 pos = tiles_vec[rand()%tiles_vec.size()];
 
-        auto enemy = new ChaserEnemy(pos * floor_tilemap->tilesize);
+        auto enemy = new ChaserEnemy(pos * floor_tilemap->tilesize * 2);
         add_synced_entity(enemy, true);
     }
 }
