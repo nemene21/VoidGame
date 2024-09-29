@@ -2,6 +2,7 @@
 #include <entities/UI/input_field/input_field.hpp>
 #include <entities/enemies/chaser/chaser.hpp>
 #include <entities/background.hpp>
+#include <entities/endgate.hpp>
 
 std::string player_username = "";
 
@@ -81,8 +82,15 @@ void GameScene::generate_enemies(std::set<Vector2> &tiles) {
         Vector2 pos = tiles_vec[rand()%tiles_vec.size()];
 
         auto enemy = new ChaserEnemy(pos * floor_tilemap->tilesize * 2);
-        add_synced_entity(enemy, true);
+        add_synced_entity(enemy, false);
     }
+}
+void GameScene::generate_endgate(std::set<Vector2> &tiles) {
+    std::vector<Vector2> tiles_vec(tiles.begin(), tiles.end());
+    Vector2 pos = tiles_vec[rand()%tiles_vec.size()];
+
+    auto gate = new Endgate(pos * floor_tilemap->tilesize * 2);
+    add_synced_entity(gate, false);
 }
 
 void GameScene::generate_level(uint64_t seed) {

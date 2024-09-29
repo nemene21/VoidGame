@@ -8,7 +8,7 @@ uniform float time;
 void main()
 {
     vec4 pixel;
-    for (float i = 3.0; i >= 0.0; i--) {
+    for (float i = 0.0; i < 3.0; i++) {
         vec2 offset = vec2(i * 0.25, time * i * 0.01);
 
         pixel = texture2D(texture0, fragTexCoord + offset);
