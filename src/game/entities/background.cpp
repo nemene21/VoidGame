@@ -12,17 +12,7 @@ Background::Background():
 
     add_component(new TransformComponent(this));
     set_name("Background");
-}
 
-void Background::process(float delta) {
-    auto cam = CameraManager::get_camera();
-    hole_sprite.update_transform((TransformComponent*)get_component(CompType::TRANSFORM));
-    hole_sprite.position += cam->target - cam->offset + half_res;
-
-    star_sprite.update_transform((TransformComponent*)get_component(CompType::TRANSFORM));
-    star_sprite.position += cam->target - cam->offset + half_res;
-
-    auto& bond = hole_sprite.shader_bond;
     Vector2 center = {(320.f/180.f) * .5f, .5};
     bond.send_uniform("center", &center, sizeof(center), SHADER_UNIFORM_VEC2);
     float radius = 0.3;
@@ -40,4 +30,14 @@ void Background::process(float delta) {
 
     bond.bind_texture("noise", TextureManager::get("black_hole/noise.png"));
     bond.bind_texture("hole_colors", TextureManager::get("black_hole/hole_gradient.png"));
+
+}
+
+void Background::process(float delta) {
+    auto cam = CameraManager::get_camera();
+    hole_sprite.update_transform((TransformComponent*)get_component(CompType::TRANSFORM));
+    hole_sprite.position += cam->target - cam->offset + half_res;
+
+    star_sprite.update_transform((TransformComponent*)get_component(CompType::TRANSFORM));
+    star_sprite.position += cam->target - cam->offset + half_res;
 }
