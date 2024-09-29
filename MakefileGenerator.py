@@ -89,6 +89,9 @@ def generate_makefile():
     for source in source_files:
         if not (WEB and get_filename(source) == "rich_presence"):
             add(f"{OBJ_DIR}/{get_filename(source)}.o: {ROOT_DIR}/{source}.cpp")
+            header = f"{source}.hpp"
+            if os.path.exists(header):
+                add(f" {ROOT_DIR}/{header}")
             next(); tab()
 
             add(f"{COMPILER} {CFLAGS} -c {ROOT_DIR}/{source}.cpp -o $(@)")

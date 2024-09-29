@@ -374,7 +374,7 @@ Vector2 Tilemap::pathfind(Vector2 from, Vector2 to, int max_iterations) {
     to   = to_tilepos(to);
 
     if (from == to) return {0, 0};
-    if (get_tile(to) != -1) return {0, 0};
+    if (check_collider(to.x, to.y)) return {0, 0};
 
     open.insert({
         {from.x, from.y}, PathNode{nullptr, (int)from.x, (int)from.y, 0, Vector2Distance(from, to) * PATHFINDING_DIST_MULT}
@@ -435,7 +435,7 @@ Vector2 Tilemap::pathfind(Vector2 from, Vector2 to, int max_iterations) {
                 best_node->x + offset.x,
                 best_node->y + offset.y
             );
-            if (get_tile(neighbour_pos.first, neighbour_pos.second) != -1)
+            if (check_collider(neighbour_pos.first, neighbour_pos.second))
                 continue;
 
             if (done.find(neighbour_pos) != done.end())
