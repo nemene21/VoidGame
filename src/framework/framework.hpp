@@ -23,6 +23,7 @@
 // Misc
 #include <misc.hpp>
 #include <input.hpp>
+#include <commands.hpp>
 
 // Component/entity/scene
 #include <entity.hpp>
@@ -53,7 +54,6 @@ private:
     static void draw_game_layer(float delta);
     static void draw_ui_layer(float delta);
     static void debug_gui();
-    static std::vector<std::string> parse_command(char* command);
 
 public:
     static void init(std::string title, Vector2 resolution, int window_scale=1, bool _debug_window=false);
