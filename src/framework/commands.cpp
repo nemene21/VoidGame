@@ -2,6 +2,20 @@
 
 std::map <std::string, std::function<void(std::vector<std::string>)> > commands;
 
+void commands_init() {
+    
+    register_command("teleport", [] (std::vector<std::string> coordinates) {
+        float xcor = std::stoi(coordinates[0]);
+        float ycor = std::stoi(coordinates[1]);        
+
+        for(auto player: SceneManager::scene_on->query_in_group("Player")){
+            if(player -> owned == true) 
+            ((TransformComponent*)player -> get_component(CompType::TRANSFORM)) -> position = {xcor, ycor};
+            }
+        }
+    );
+}
+
 std::vector<std::string> parse_command(char* input) {
     std::string raw_string = input;
     std::vector<std::string> variables;

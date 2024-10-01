@@ -84,6 +84,9 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale, bo
 
     Networking::init();
     Packets::init();
+
+    // Commands init
+    commands_init();
 }
 
 void Framework::debug_gui() {
