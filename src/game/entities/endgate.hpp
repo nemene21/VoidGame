@@ -3,6 +3,7 @@
 #include <entity.hpp>
 #include <sprites.hpp>
 #include <label.hpp>
+#include <input.hpp>
 
 class Endgate: public Entity {
 public:
@@ -12,7 +13,7 @@ public:
     TransformComponent* trans_comp;
     AreaComponent* area_comp;
 
-    bool can_interract;
+    bool can_interact;
 
     Endgate(Vector2 pos);
     void process(float delta);

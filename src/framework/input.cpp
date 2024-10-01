@@ -9,6 +9,7 @@ std::map<std::string, std::vector<Input>> inputs = {
     {"Delete Char", {{InputType::KEY, KEY_BACKSPACE}}},
 
     {"Swap Weapon", {{InputType::KEY, KEY_SPACE}}},
+    {"Interact", {{InputType::KEY, KEY_E}}},
 
     {"Up",    {{InputType::KEY, KEY_W}, {InputType::KEY, KEY_UP   }}},
     {"Left",  {{InputType::KEY, KEY_A}, {InputType::KEY, KEY_LEFT }}},

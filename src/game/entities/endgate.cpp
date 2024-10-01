@@ -2,7 +2,7 @@
 
 Endgate::Endgate(Vector2 pos): sprite {Sprite("next_level.png")},
     button_label {Label(pos, "E", 16, {.5, .5})},
-    can_interract {false} {
+    can_interact {false} {
     trans_comp = new TransformComponent(this, pos);
 
     button_label.offset = {0, -8.0};
@@ -14,13 +14,13 @@ Endgate::Endgate(Vector2 pos): sprite {Sprite("next_level.png")},
     area_comp->area_entered.connect([this](Entity* ent) {
         auto player = area_comp->last_entered->entity;
         if (player->owned) {
-            can_interract = true;
+            can_interact = true;
         }
     });
     area_comp->area_exited.connect([this](Entity* ent) {
         auto player = area_comp->last_exited->entity;
         if (player->owned) {
-            can_interract = false;
+            can_interact = false;
         }
     });
     add_component(area_comp);
@@ -29,6 +29,10 @@ Endgate::Endgate(Vector2 pos): sprite {Sprite("next_level.png")},
 void Endgate::process(float delta) {
     sprite.update_transform(trans_comp);
 
-    button_label.visible = can_interract;
+    button_label.visible = can_interact;
     button_label.update_transform_cam(trans_comp);
+
+    if (can_interact && IsJustPressed("Interact")) {
+        quick_exit(1);
+    }
 }

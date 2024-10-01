@@ -21,7 +21,6 @@ void ChaserEnemy::process(float delta) {
 
 
 void ChaserEnemy::chase(float delta) {
-    std::cout << "only host should process this!" << std::endl;
     auto tilemap = (Tilemap*)SceneManager::scene_on->get_entity("Tilemap");
 
     auto target_trans = (TransformComponent*)target->get_component(CompType::TRANSFORM);
