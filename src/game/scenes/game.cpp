@@ -82,7 +82,7 @@ void GameScene::generate_enemies(std::set<Vector2> &tiles) {
         Vector2 pos = tiles_vec[rand()%tiles_vec.size()];
 
         auto enemy = new ChaserEnemy(pos * floor_tilemap->tilesize * 2);
-        add_synced_entity(enemy, false);
+        add_synced_entity(enemy, true);
     }
 }
 void GameScene::generate_endgate(std::set<Vector2> &tiles) {
@@ -90,7 +90,7 @@ void GameScene::generate_endgate(std::set<Vector2> &tiles) {
     Vector2 pos = tiles_vec[rand()%tiles_vec.size()];
 
     auto gate = new Endgate(pos * floor_tilemap->tilesize * 2);
-    add_synced_entity(gate, false);
+    add_entity(gate);
 }
 
 void GameScene::generate_level(uint64_t seed) {
@@ -104,8 +104,8 @@ void GameScene::generate_level(uint64_t seed) {
         send_generation_packet(seed);
 
     auto floor_tiles = generate_floor_tiles(data);
-    generate_enemies(floor_tiles);
     generate_endgate(floor_tiles);
+    generate_enemies(floor_tiles);
 
     for (auto pos: floor_tiles) {
         auto actual_pos = pos*2;
