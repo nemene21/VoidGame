@@ -251,7 +251,7 @@ void SceneManager::init() {
 
     unpackers[(int)PacketType::ENTITY_SYNC] = [](Packet* packet) {
         auto sync_packet = reinterpret_cast<EntitySyncPacket*>(packet);
-        if ((int)sync_packet->entity_type == -1) {
+        if ((int)sync_packet->entity_type == 65535) {
             std::cout << "WARNING!!! Entity isn't registered!!!" << std::endl;
         }
         Entity* entity = synced_entity_factory.get(
