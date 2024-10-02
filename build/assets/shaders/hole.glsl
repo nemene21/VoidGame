@@ -88,7 +88,6 @@ void main()
     animated_hole_radius += sin(time) * 0.03;
 
     float light = 1.3 + dot(light_dir, normalize(diff)) * 0.4;
-    light *= texture2D(noise, uv + time*0.1).r * 0.3 + 0.8;
 
     if (dist < animated_hole_radius) {
         gl_FragColor = BLACK;
@@ -98,7 +97,8 @@ void main()
     }
     else if (dist < animated_halo_radius) {
         float anim = dist / animated_halo_radius;
-        gl_FragColor.rgb = get_color(smoothstep(1.0, 0.65, anim) * light);
+        noise_value = texture2D(noise, vec2(angle(diff) / 3.14 + time * 0.075, anim)).r * 0.8 + 0.5;
+        gl_FragColor.rgb = get_color(smoothstep(1.0, 0.65, anim) * light * noise_value);
     }
     float ring_dist = length(vec2(diff.x, diff.y * 4.0));
 
@@ -107,8 +107,9 @@ void main()
                    !(abs(diff.x) < animated_hole_radius && uv.y < 0.5);
     if (in_ring) {
         float anim = ring_dist / animated_ring_radius;
+        noise_value = texture2D(noise, vec2(angle(diff) / 3.14 + time * 0.075, anim)).r * 0.7 + 0.3;
         gl_FragColor.rgb = max_color(
-            gl_FragColor.rgb, get_color(smoothstep(1.0, 0.5, anim) * light)
+            gl_FragColor.rgb, get_color(smoothstep(1.0, 0.5, anim) * light * noise_value)
         );
     }
 

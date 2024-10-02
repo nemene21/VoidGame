@@ -1,18 +1,6 @@
 #include "background.hpp"
 
-Background::Background():
-    hole_sprite {Sprite("black_hole/blank.png")},
-    star_sprite {Sprite("black_hole/stars.png")} {
-    hole_sprite.z_coord = -100;
-    star_sprite.z_coord = hole_sprite.z_coord - 1;
-
-    auto& bond = hole_sprite.shader_bond;
-    bond.set_shader("hole.glsl");
-    star_sprite.shader_bond.set_shader("stars.glsl");
-
-    add_component(new TransformComponent(this));
-    set_name("Background");
-
+void setup_uniforms(ShaderBond& bond) {
     Vector2 center = {(320.f/180.f) * .5f, .5};
     bond.send_uniform("center", &center, sizeof(center), SHADER_UNIFORM_VEC2);
     float radius = 0.3;
@@ -33,6 +21,21 @@ Background::Background():
 
 }
 
+Background::Background():
+    hole_sprite {Sprite("black_hole/blank.png")},
+    star_sprite {Sprite("black_hole/stars.png")} {
+    hole_sprite.z_coord = -100;
+    star_sprite.z_coord = hole_sprite.z_coord - 1;
+
+    auto& bond = hole_sprite.shader_bond;
+    bond.set_shader("hole.glsl");
+    star_sprite.shader_bond.set_shader("stars.glsl");
+    setup_uniforms(bond);
+
+    add_component(new TransformComponent(this));
+    set_name("Background");
+}
+
 void Background::process(float delta) {
     auto cam = CameraManager::get_camera();
     hole_sprite.update_transform((TransformComponent*)get_component(CompType::TRANSFORM));
@@ -40,4 +43,8 @@ void Background::process(float delta) {
 
     star_sprite.update_transform((TransformComponent*)get_component(CompType::TRANSFORM));
     star_sprite.position += cam->target - cam->offset + half_res;
+
+    if (TryingToHotReload()) {
+        setup_uniforms(hole_sprite.shader_bond);
+    }
 }
