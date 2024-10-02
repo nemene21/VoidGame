@@ -20,6 +20,7 @@ enum class PacketType: uint8_t  {
     ENTITY_NUKE,
     COMPONENT_UPDATE,
     GENERATION,
+    START_GAME,
     COUNT,
 };
 

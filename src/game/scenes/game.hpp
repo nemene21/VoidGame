@@ -16,11 +16,14 @@ class GameScene: public Scene {
 public:
     Tilemap* floor_tilemap;
     Sprite background;
+    Label start_label;
+    bool started;
 
     GameScene();
     void restart();
 
     void process(float delta);
+    void start_game();
 
     void generate_level(uint64_t seed);
     void generate_enemies(std::set<Vector2> &tiles);

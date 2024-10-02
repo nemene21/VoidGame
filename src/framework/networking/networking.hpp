@@ -19,6 +19,7 @@ namespace Networking {
     void disconnect();
     std::string get_local_ip();
     bool active();
+    int get_user_count();
 
     void process();
     void send(Packet* packet, size_t size, bool reliable=false);

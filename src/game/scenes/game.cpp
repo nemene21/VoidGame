@@ -6,7 +6,8 @@
 
 std::string player_username = "";
 
-GameScene::GameScene(): Scene("game_scene"), background {Sprite("320x180.png")} {
+GameScene::GameScene(): Scene("game_scene"), background {Sprite("320x180.png")},
+    start_label {Label({16, 16}, "Waiting for host to start...", 16)} {
     unpackers[(int)PacketType::GENERATION] = [this](Packet* packet) {
         auto cast_packet = reinterpret_cast<GenerationPacket*>(packet);
         generate_level(cast_packet->seed);
@@ -14,9 +15,23 @@ GameScene::GameScene(): Scene("game_scene"), background {Sprite("320x180.png")} 
 
     Player::init_weapons();
     Player::init_projectiles();
+
+    if (Networking::is_host) {
+        start_label.text = "Space to start, players: ";
+    }
+    started = false;
+
+    unpackers[(int)PacketType::START_GAME] = [this](Packet* packet) {
+        start_game();
+    };
 }
 
 void GameScene::restart() {
+    started = false;
+}
+
+void GameScene::start_game() {
+    started = true;
     floor_tilemap = new Tilemap({24, 24}, "test_tileset.png");
     floor_tilemap->collider_mode = ColliderBuildMode::OUTER;
     floor_tilemap->renderer.z_coord = -5;
@@ -27,13 +42,26 @@ void GameScene::restart() {
     add_synced_entity(player, true);
     
     add_entity(new Background());
+    start_label.visible = false;
+
+    if (Networking::is_host) {
+        auto pck = Packet{PacketType::START_GAME, true};
+        Networking::send(&pck, sizeof(pck), true);
+    }
 }
 
 void GameScene::process(float delta) {
     if (Networking::active()) {
         Networking::process();
 
-        if (IsKeyPressed(KEY_G) && Networking::is_host) {
+        if (Networking::is_host) {
+            start_label.text = "Space to start, players: " + std::to_string(
+                Networking::get_user_count()
+            );
+        }
+
+        if (IsKeyPressed(KEY_SPACE) && Networking::is_host && !started) {
+            start_game();
             generate_level(rand64());
         }
     }

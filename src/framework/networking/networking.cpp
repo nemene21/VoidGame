@@ -12,6 +12,13 @@ namespace Networking {
 
     int port = 7777;
 
+    int get_user_count() {
+        if (Networking::is_host) {
+            return server->peerCount;
+        }
+        return -1;
+    }
+
     void init() {
         if (enet_initialize() != 0) {
             std::cerr << "Error while initializing enet :(" << std::endl;
