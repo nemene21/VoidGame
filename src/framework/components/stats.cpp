@@ -7,9 +7,9 @@ void Stats::newstat(const std::string& name, Stat stat) {
 
 void Stats::fetchstat(const std::string& name) const {
     if (stats.find(name) != stats.end()) {
-        std::cout << "Name: " <<
-        << "\n" << "Value: " <<
-        << "\n" << "Modifier: " << << std::endl;
+        std::cout << "Name: " << "-"
+        << "\n" << "Value: " << "-"
+        << "\n" << "Modifier: " << "-" << std::endl;
     }
 }
 

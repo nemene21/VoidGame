@@ -1,4 +1,5 @@
 #include "endgate.hpp"
+#include <scenes/game.hpp>
 
 Endgate::Endgate(Vector2 pos): sprite {Sprite("next_level.png")},
     button_label {Label(pos, "E", 16, {.5, .5})},
@@ -33,6 +34,9 @@ void Endgate::process(float delta) {
     button_label.update_transform_cam(trans_comp);
 
     if (can_interact && IsJustPressed("Interact")) {
-        quick_exit(1);
+        SceneManager::set_scene_global("game_scene");
+        auto scene = (GameScene*)SceneManager::scene_on;
+        scene->start_game();
+        scene->generate_level(rand64());
     }
 }

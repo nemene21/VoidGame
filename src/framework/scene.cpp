@@ -204,6 +204,18 @@ void SceneManager::set_scene(std::string name) {
     scene_map[name]->restart();
 }
 
+void SceneManager::set_scene_global(std::string name) {
+    set_scene(name);
+
+    auto pck = ChangeScenePacket{
+        PacketType::SCENE_CHANGE,
+        true,
+        ""
+    };
+    strcpy(pck.scene_name, name.c_str());
+    Networking::send(&pck, sizeof(pck), true);
+}
+
 void SceneManager::unload(std::string name) {
     delete scene_map[name];
     scene_map.erase(name);

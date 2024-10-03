@@ -55,12 +55,11 @@ void GameScene::process(float delta) {
         Networking::process();
 
         if (Networking::is_host) {
-            start_label.text = "Space to start, players: " + std::to_string(
+            start_label.text = "S to start, players: " + std::to_string(
                 Networking::get_user_count()
             );
         }
-
-        if (IsKeyPressed(KEY_SPACE) && Networking::is_host && !started) {
+        if (IsKeyPressed(KEY_S) && Networking::is_host && !started) {
             start_game();
             generate_level(rand64());
         }
@@ -98,6 +97,7 @@ void send_generation_packet(uint64_t seed) {
         true,
         seed
     };
+    std::cout << "sent seed " << seed << std::endl;
     Networking::send(&packet, sizeof(packet), true);
 }
 
@@ -111,6 +111,7 @@ void GameScene::generate_enemies(std::set<Vector2> &tiles) {
 
         auto enemy = new ChaserEnemy(pos * floor_tilemap->tilesize * 2);
         add_synced_entity(enemy, true);
+        std::cout << "me when" << std::endl;
     }
 }
 void GameScene::generate_endgate(std::set<Vector2> &tiles) {
@@ -132,8 +133,6 @@ void GameScene::generate_level(uint64_t seed) {
         send_generation_packet(seed);
 
     auto floor_tiles = generate_floor_tiles(data);
-    generate_endgate(floor_tiles);
-    generate_enemies(floor_tiles);
 
     for (auto pos: floor_tiles) {
         auto actual_pos = pos*2;
@@ -143,4 +142,7 @@ void GameScene::generate_level(uint64_t seed) {
         floor_tilemap->set_tile(actual_pos+Vector2{1, 1}, 0);
     }
     floor_tilemap->build();
+
+    generate_endgate(floor_tiles);
+    generate_enemies(floor_tiles);
 }

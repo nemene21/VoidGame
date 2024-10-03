@@ -21,6 +21,7 @@ enum class PacketType: uint8_t  {
     COMPONENT_UPDATE,
     GENERATION,
     START_GAME,
+    SCENE_CHANGE,
     COUNT,
 };
 
@@ -31,6 +32,10 @@ struct Packet {
 
 struct LogPacket: public Packet {
     char message[256];
+};
+
+struct ChangeScenePacket: public Packet {
+    char scene_name[32];
 };
 
 // Component packets

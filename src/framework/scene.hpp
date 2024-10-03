@@ -91,6 +91,7 @@ public:
     /// @brief Sets the current scene to another one
     /// @param name Scene name
     static void set_scene(std::string name);
+    static void set_scene_global(std::string name);
 };
 
 #endif
