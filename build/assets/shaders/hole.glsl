@@ -28,6 +28,10 @@ float angle(vec2 v) {
     return atan(v.y, v.x);
 }
 
+vec3 lerp_col(vec3 first, vec3 other, float blend) {
+    return first + (other - first) * blend;
+}
+
 vec2 rotate(vec2 v, float angle) {
     float cosA = cos(angle);
     float sinA = sin(angle);
@@ -92,7 +96,9 @@ void main()
     if (dist < animated_hole_radius) {
         gl_FragColor = BLACK;
         if (dist > hole_radius) {
-            gl_FragColor = vec4(0.1, 0.1, 0.2, 1);
+            gl_FragColor.rgb = lerp_col(BLACK.rgb, vec3(0.1, 0.1, 0.2),
+                pow((dist - hole_radius) / (animated_hole_radius - hole_radius), 0.75)
+            );
         }
     }
     else if (dist < animated_halo_radius) {
