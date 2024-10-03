@@ -14,7 +14,13 @@ namespace Networking {
 
     int get_user_count() {
         if (Networking::is_host) {
-            return server->peerCount;
+            int connected = 0;
+            for (size_t i = 0; i < server->peerCount; ++i) {
+                if (server->peers[i].state == ENET_PEER_STATE_CONNECTED) {
+                    connected++;
+                }
+            }
+            return connected;
         }
         return -1;
     }
