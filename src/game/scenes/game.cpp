@@ -3,6 +3,7 @@
 #include <entities/enemies/chaser/chaser.hpp>
 #include <entities/background.hpp>
 #include <entities/endgate.hpp>
+#include <entities/UI/game_start_ui.hpp>
 
 std::string player_username = "";
 
@@ -16,9 +17,6 @@ GameScene::GameScene(): Scene("game_scene"), background {Sprite("320x180.png")},
     Player::init_weapons();
     Player::init_projectiles();
 
-    if (Networking::is_host) {
-        start_label.text = "Space to start, players: ";
-    }
     started = false;
 
     unpackers[(int)PacketType::START_GAME] = [this](Packet* packet) {
@@ -28,9 +26,12 @@ GameScene::GameScene(): Scene("game_scene"), background {Sprite("320x180.png")},
 
 void GameScene::restart() {
     started = false;
+    add_entity(new GameStartUI());
 }
 
 void GameScene::start_game() {
+    get_entity("Start UI")->queue_free();
+
     started = true;
     floor_tilemap = new Tilemap({24, 24}, "test_tileset.png");
     floor_tilemap->collider_mode = ColliderBuildMode::OUTER;
@@ -54,11 +55,6 @@ void GameScene::process(float delta) {
     if (Networking::active()) {
         Networking::process();
 
-        if (Networking::is_host) {
-            start_label.text = "S to start, players: " + std::to_string(
-                Networking::get_user_count()
-            );
-        }
         if (IsKeyPressed(KEY_S) && Networking::is_host && !started) {
             start_game();
             generate_level(rand64());
