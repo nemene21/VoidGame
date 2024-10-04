@@ -36,7 +36,5 @@ void Endgate::process(float delta) {
     if (can_interact && IsJustPressed("Interact")) {
         SceneManager::set_scene_global("game_scene");
         auto scene = (GameScene*)SceneManager::scene_on;
-        scene->start_game();
-        scene->generate_level(rand64());
     }
 }

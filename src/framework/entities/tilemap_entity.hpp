@@ -80,6 +80,9 @@ public:
     TilemapRenderer renderer;
 
     Tilemap(Vector2 tilesize, std::string texture_path);
+    ~Tilemap();
+
+    void clear_colliders(std::pair<int, int> chunk_pos);
 
     void process(float delta);
     void render(float delta);

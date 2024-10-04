@@ -13,6 +13,16 @@ Tilemap::Tilemap(Vector2 tilesize, std::string texture_path):
         set_name("Tilemap");
     }
 
+Tilemap::~Tilemap() {
+    for (auto chunk_pair: collider_chunks) {
+        auto chunk = chunk_pair.second;
+        for (auto comp: chunk) {
+            delete comp;
+        }
+        chunk.clear();
+    }
+}
+
 // Json to/from for TileData and Vector2
 void to_json(json& j, const Vector2& vec) {
     j = json{{"x", vec.x}, {"y", vec.y}};
@@ -224,8 +234,6 @@ void Tilemap::build_chunk(std::pair<int, int> chunk_pos) {
         corners.insert({pos.first -.5f, pos.second -.5f, tile.second.type});
         corners.insert({pos.first +.5f, pos.second -.5f, tile.second.type});
         corners.insert({pos.first -.5f, pos.second +.5f, tile.second.type});
-
-        
     }
 
     for (std::tuple<float, float, int> corner_data: corners) {

@@ -1,7 +1,7 @@
 #include "game_start_ui.hpp"
 
 GameStartUI::GameStartUI():
-    start_label {Label({16, 16}, "Waiting for host to start...", 16)}
+    start_label {Label({16, 16}, "Waiting for host to start...", 22)}
     {
         set_name("Start UI");
     }

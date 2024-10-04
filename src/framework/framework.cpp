@@ -171,6 +171,7 @@ void Framework::debug_gui() {
 
 void Framework::process_modules(float delta) {
     // Processing data managers
+    SceneManager::check_change();
     TextureManager::unload_check();
     ParticleDataManager::unload_check();
     
@@ -179,6 +180,7 @@ void Framework::process_modules(float delta) {
 
     ShaderManager::unload_check();
     ShaderManager::update_uniforms();
+
 
     #ifndef WEB
         RichPresence::update();
@@ -194,15 +196,20 @@ void Framework::process_modules(float delta) {
 }
 
 void Framework::process_scene(float delta) {
-    SceneManager::scene_on->process(delta);
+    if (SceneManager::scene_on != nullptr)
+        SceneManager::scene_on->process(delta);
     
     ColliderManager::reload_colliders();
     AreaManager::reload_areas();
 
-    SceneManager::scene_on->process_entities(delta);
+    if (SceneManager::scene_on != nullptr)
+        SceneManager::scene_on->process_entities(delta);
 }
 
 void Framework::draw_game_layer(float delta) {
+    if (SceneManager::scene_on == nullptr)
+        return;
+
     // Game layer
     BeginTextureMode(game_layer);
     BeginMode2D(*global_camera);
@@ -302,7 +309,7 @@ void Framework::run() {
             WHITE
         );
 
-        if (debug_ui) {
+        if (debug_ui && SceneManager::scene_on != nullptr) {
             Framework::debug_gui();
         }
         clock_t new_frame_timer = clock();

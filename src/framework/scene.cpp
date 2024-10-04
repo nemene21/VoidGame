@@ -31,14 +31,10 @@ void Scene::process_entities(float delta) {
             continue;
 
         entity->process_components(delta);
-
         entity->process(delta);
+
         if (!entity->is_synced() || entity->owned) {
             entity->private_process(delta);
-        }
-
-        if (name != SceneManager::scene_on->name) {
-            break;
         }
     }
 
@@ -59,6 +55,8 @@ void Scene::process_entities(float delta) {
             nuke_entity(entities[i]);
         }
     }
+
+    SceneManager::check_change();
 }
 
 void Scene::draw_entities(float delta) {
@@ -195,17 +193,23 @@ void Scene::process(float delta) {}
 // <Scene Manager>
 SceneMap SceneManager::scene_map = {};
 Scene*   SceneManager::scene_on = nullptr;
+std::string SceneManager::changing_to = "NONE";
 
 void SceneManager::setup_scene(Scene* scene) {
     scene_map[scene->name] = scene;
 }
 
 void SceneManager::set_scene(std::string name) {
-    scene_map[name]->unload_entities();
+    changing_to = name;
+}
+
+void SceneManager::preform_scene_swap() {
+    scene_map[changing_to]->unload_entities();
     DrawableManager::clear();
 
-    scene_on = scene_map[name];
-    scene_map[name]->restart();
+    scene_on = scene_map[changing_to];
+    scene_map[changing_to]->restart();
+    changing_to = "NONE";
 }
 
 void SceneManager::set_scene_global(std::string name) {
@@ -231,6 +235,15 @@ void SceneManager::unload_all() {
         to_unload.push_back(scene_pair.first);
     }
     for (auto to: to_unload) unload(to);
+}
+
+void SceneManager::check_change() {
+    if (scene_on == nullptr) {
+        preform_scene_swap();
+    }
+    if (changing_to != "NONE") {
+        preform_scene_swap();
+    }
 }
 
 void SceneManager::init() {
@@ -307,5 +320,10 @@ void SceneManager::init() {
         SceneManager::scene_on->nuke_entity(
             SceneManager::scene_on->get_entity_by_id(nuke_packet->id)
         );
+    };
+
+    unpackers[(int)PacketType::SCENE_CHANGE] = [](Packet* packet) {
+        auto scene_packet = (ChangeScenePacket*)packet;
+        SceneManager::set_scene(scene_packet->scene_name);
     };
 }

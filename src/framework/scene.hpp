@@ -79,6 +79,7 @@ class SceneManager {
 public:
     static SceneMap scene_map;
     static Scene* scene_on;
+    static std::string changing_to;
 
     static void init();
 
@@ -87,10 +88,12 @@ public:
     static void setup_scene(Scene* scene);
     static void unload(std::string name);
     static void unload_all();
+    static void check_change();
 
     /// @brief Sets the current scene to another one
     /// @param name Scene name
     static void set_scene(std::string name);
+    static void preform_scene_swap();
     static void set_scene_global(std::string name);
 };
 
