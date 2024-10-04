@@ -6,7 +6,7 @@ Endgate::Endgate(Vector2 pos): sprite {Sprite("next_level.png")},
     can_interact {false} {
     trans_comp = new TransformComponent(this, pos);
 
-    button_label.offset = {0, -8.0};
+    button_label.offset = {0, -24.0};
 
     if (!Networking::is_host) return;
     area_comp = new AreaComponent(this, 24);

@@ -57,7 +57,7 @@ void Label::draw() {
 
     DrawTextPro(
         FONT, text.c_str(), 
-        position,
+        position + offset,
         get_dimensions() * centering,
         angle,
         scaled_fontsize, get_spacing(),
