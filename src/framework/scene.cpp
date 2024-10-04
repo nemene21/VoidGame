@@ -36,6 +36,10 @@ void Scene::process_entities(float delta) {
         if (!entity->is_synced() || entity->owned) {
             entity->private_process(delta);
         }
+
+        if (name != SceneManager::scene_on->name) {
+            break;
+        }
     }
 
     comp_update_timer -= delta;
